@@ -1,20 +1,17 @@
 /* 
- * Copyright (C) 2011 Hisense Electric Co., Ltd. 
+ * Copyright (C) 2015 Alex. 
  * All Rights Reserved.
  *
- * ALL RIGHTS ARE RESERVED BY HISENSE ELECTRIC CO., LTD. ACCESS TO THIS
+ * ALL RIGHTS ARE RESERVED BY Alex. ACCESS TO THIS
  * SOURCE CODE IS STRICTLY RESTRICTED UNDER CONTRACT. THIS CODE IS TO
  * BE KEPT STRICTLY CONFIDENTIAL.
  *
  * UNAUTHORIZED MODIFICATION OF THIS FILE WILL VOID YOUR SUPPORT CONTRACT
- * WITH HISENSE ELECTRIC CO., LTD. IF SUCH MODIFICATIONS ARE FOR THE PURPOSE
+ * WITH Alex(zeroapp@126.com). IF SUCH MODIFICATIONS ARE FOR THE PURPOSE
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
-
 package com.zeroapp.utils;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,10 +20,9 @@ import android.content.pm.PackageManager;
  * <p>Title: TODO.</p>
  * <p>Description: TODO.</p>
  *
- * @author Bobby Zou(zouxiaobo@hisense.com) 2015-5-22.
+ * @author Alex(zeroapp@126.com) 2015-5-26.
  * @version $Id$
  */
-
 public class Log {
 
     public static String TAG = "Zeroapp";
