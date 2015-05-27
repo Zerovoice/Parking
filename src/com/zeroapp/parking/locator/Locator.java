@@ -11,7 +11,7 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.gpslocator.locator.impl;
+package com.zeroapp.parking.locator;
 
 import android.content.Context;
 import android.location.Criteria;

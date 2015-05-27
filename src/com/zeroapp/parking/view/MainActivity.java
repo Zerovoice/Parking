@@ -10,14 +10,25 @@
  * WITH Alex(zeroapp@126.com). IF SUCH MODIFICATIONS ARE FOR THE PURPOSE
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
-package com.zeroapp.gpslocator.view;
+package com.zeroapp.parking.view;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.zeroapp.gpslocator.R;
+import com.zeroapp.parking.R;
 
+/**
+ * <p>
+ * Title: TODO.
+ * </p>
+ * <p>
+ * Description: TODO.
+ * </p>
+ * 
+ * @author Alex(zeroapp@126.com) 2015-5-27.
+ * @version $Id$
+ */
 public class MainActivity extends Activity {
 
     @Override
@@ -30,7 +41,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.option_menu, menu);
         return true;
     }
 

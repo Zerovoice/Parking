@@ -11,15 +11,12 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.gpslocator.locator.impl;
+package com.zeroapp.parking.locator;
 
 import android.content.Context;
 import android.location.Location;
 
 import com.zeroapp.utils.Log;
-
-
-
 
 /**
  * <p>
@@ -29,13 +26,14 @@ import com.zeroapp.utils.Log;
  * Description: TODO.
  * </p>
  * 
- * @author Alex(zeroapp@126.com) 2015-5-26.
+ * @author Alex(zeroapp@126.com) 2015-5-27.
  * @version $Id$
  */
 public class Tracer {
 
     private Context mContext;
     private Locator mLocator;
+    private Location mRequestLocation = null;
     public static Tracer tracer = null;
 
     private Tracer(Context context) {
@@ -49,6 +47,14 @@ public class Tracer {
         }
         return tracer;
     }
+
+    public Location getRequestLocation() {
+        return mRequestLocation;
+    }
+
+//    public void setRequestLocation(Location requestLocation) {
+//        mRequestLocation = requestLocation;
+//    }
 
     /**
      * <p>
@@ -64,7 +70,9 @@ public class Tracer {
     public void onLocationChanged(Location location) {
         Log.i("Time:" + location.getTime() + "\n new Location: " + location + "\n with speed:"
                 + location.getSpeed());
-
+        // test code
+        mRequestLocation = location;
+        // test code
     }
 
 }
