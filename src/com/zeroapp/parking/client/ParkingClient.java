@@ -22,9 +22,11 @@ import android.os.IBinder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Config;
@@ -100,8 +102,15 @@ public class ParkingClient extends Service {
         super.onDestroy();
     }
 
-    public int sendMessageToServer(ClientServerMessage m) {
-        return 0;
+    public int sendMessageToServer(AMessage m) {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(mSocket.getOutputStream());
+            oos.writeObject(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return 1;
     }
 
     /**
@@ -156,7 +165,7 @@ public class ParkingClient extends Service {
      * 
      * @param message
      */
-    private void handleMessage(ClientServerMessage message) {
+    private void handleMessage(AMessage message) {
         mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_FROM_SERVER, message).sendToTarget();
 
     }

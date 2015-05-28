@@ -36,8 +36,8 @@ import com.zeroapp.parking.bluetooth.BluetoothChatService;
 import com.zeroapp.parking.client.ParkingClient;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.MessageConst;
-import com.zeroapp.parking.message.MyMessage;
 import com.zeroapp.utils.Log;
 
 /**
@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     private FrameLayout topLayout = null;
     private Button buttonSignin;
 
-    private ParkingClient mClient = null;
+    ParkingClient mClient = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MessageConst.MessageType.MESSAGE_FROM_SERVER:
-                    f.refreshUI((MyMessage) msg.obj);
+                    f.refreshUI((AMessage) msg.obj);
                     break;
                 case MESSAGE_NEW_LOCATION:
                     // zxb

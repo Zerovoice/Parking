@@ -23,6 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
+import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
 /**
@@ -65,7 +68,10 @@ public class SigninFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+                AMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+                m.setMessageContent("test");
+                mainActivity.mClient.sendMessageToServer(m);
 
             }
         });
