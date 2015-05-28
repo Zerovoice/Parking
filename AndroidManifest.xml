@@ -7,6 +7,8 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
         android:allowBackup="true"
@@ -21,14 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BluetoothChat"
-                  android:label="@string/app_name"
-                  android:configChanges="orientation|keyboardHidden">
-        </activity>
-        <activity android:name=".DeviceListActivity"
-                  android:label="@string/select_device"
-                  android:theme="@android:style/Theme.Holo.Dialog"
-                  android:configChanges="orientation|keyboardHidden" />
+        <activity 
+            android:name="com.zeroapp.parking.bluetooth.DeviceListActivity"
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

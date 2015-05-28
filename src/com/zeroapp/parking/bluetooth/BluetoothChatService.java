@@ -16,11 +16,6 @@
 
 package com.zeroapp.parking.bluetooth;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -30,6 +25,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -87,7 +87,8 @@ public class BluetoothChatService {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BluetoothChat.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(0, state, -1).sendToTarget();// zxb
+                                                            // MainActivity.MESSAGE_STATE_CHANGE
     }
 
     /**
@@ -173,9 +174,10 @@ public class BluetoothChatService {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BluetoothChat.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(0);// zxb
+                                                // MainActivity.MESSAGE_DEVICE_NAME
         Bundle bundle = new Bundle();
-        bundle.putString(BluetoothChat.DEVICE_NAME, device.getName());
+        bundle.putString("", device.getName());// zxb MainActivity.DEVICE_NAME
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -232,9 +234,10 @@ public class BluetoothChatService {
      */
     private void connectionFailed() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(BluetoothChat.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage();// zxb MainActivity.MESSAGE_TOAST
         Bundle bundle = new Bundle();
-        bundle.putString(BluetoothChat.TOAST, "Unable to connect device");
+        bundle.putString("", "Unable to connect device");// zxb
+                                                         // MainActivity.TOAST
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -247,9 +250,11 @@ public class BluetoothChatService {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(BluetoothChat.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(0);// zxb
+                                                // MainActivity.MESSAGE_TOAST
         Bundle bundle = new Bundle();
-        bundle.putString(BluetoothChat.TOAST, "Device connection was lost");
+        bundle.putString("", "Device connection was lost");// zxb
+                                                           // MainActivity.TOAST
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -386,6 +391,7 @@ public class BluetoothChatService {
                 // successful connection or an exception
                 mmSocket.connect();
             } catch (IOException e) {
+                e.printStackTrace();
                 // Close the socket
                 try {
                     mmSocket.close();
@@ -454,7 +460,8 @@ public class BluetoothChatService {
                     bytes = mmInStream.read(buffer);
 
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(BluetoothChat.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(0, bytes, -1, buffer)// zxb
+                                                                // MainActivity.MESSAGE_READ
                             .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
@@ -475,7 +482,8 @@ public class BluetoothChatService {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(BluetoothChat.MESSAGE_WRITE, -1, -1, buffer)
+                mHandler.obtainMessage(0, -1, -1, buffer)// zxb
+                                                         // MainActivity.MESSAGE_WRITE
                         .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
