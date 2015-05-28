@@ -242,7 +242,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
      */
     public void showFragment(int id) {
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        f = null;
         switch (id) {
             case R.id.button_signin:
                 f = new SigninFragment();
@@ -262,7 +261,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         }
         t.replace(R.id.topfl_container, f).commit();
 
-        int h = topLayout.getHeight();
+//        int h = topLayout.getHeight();
 //        Animation inAnimotion = new TranslateAnimation(0, 0, -h, 0);
 //        inAnimotion.setFillAfter(true);
 //        inAnimotion.setDuration(1000);
