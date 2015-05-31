@@ -13,19 +13,21 @@
 
 package com.zeroapp.utils;
 
-
-
 /**
- * <p>Title: TODO.</p>
- * <p>Description: TODO.</p>
- *
+ * <p>
+ * Title: TODO.
+ * </p>
+ * <p>
+ * Description: TODO.
+ * </p>
+ * 
  * @author Alex(zeroapp@126.com) 2015-5-28.
  * @version $Id$
  */
 
 public class Config {
 
-    public static final String HOST_ADRESS = "";
-    public static final int HOST_PORT = 0;
+	public static final String HOST_ADRESS = "192.168.1.102";
+	public static final int HOST_PORT = 8080;
 
 }
