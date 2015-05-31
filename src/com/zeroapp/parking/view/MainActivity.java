@@ -36,7 +36,7 @@ import com.zeroapp.parking.bluetooth.BluetoothChatService;
 import com.zeroapp.parking.client.ParkingClient;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
-import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
@@ -53,245 +53,245 @@ import com.zeroapp.utils.Log;
  */
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
+	protected static final int MESSAGE_NEW_LOCATION = 111110;// zxb
+	protected static final int MESSAGE_READ_LOCATION_RECORD = 122220;// zxb
 
+	// Member object for the chat services
+	private BluetoothChatService mChatService = null;
+	private BaseFragment f = null;
+	private FrameLayout topLayout = null;
+	private Button buttonSignin;
 
+	ParkingClient mClient = null;
 
-    protected static final int MESSAGE_NEW_LOCATION = 111110;// zxb
-    protected static final int MESSAGE_READ_LOCATION_RECORD = 122220;// zxb
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.e("+++ ON CREATE +++");
 
-    // Member object for the chat services
-    private BluetoothChatService mChatService = null;
-    private BaseFragment f = null;
-    private FrameLayout topLayout = null;
-    private Button buttonSignin;
+		// Set up the window layout
+		setContentView(R.layout.activity_main);
+		initView();
+		startClient();
+	}
 
-    ParkingClient mClient = null;
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 */
+	private void startClient() {
+		Intent i = new Intent(MainActivity.this, ParkingClient.class);
+		startService(i);
+		bindService(i, new ServiceConnection() {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("+++ ON CREATE +++");
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+				Log.w("Disconnected " + name);
+				mClient = null;// TODO
+			}
 
-        // Set up the window layout
-        setContentView(R.layout.activity_main);
-        initView();
-        startClient();
-    }
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder binder) {
+				Log.w("Connected " + name);
+				mClient = ((ParkingClient.MyBinder) binder).getClient(mHandler);
+			}
+		}, Context.BIND_AUTO_CREATE);
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
-    private void startClient() {
-        Intent i = new Intent(MainActivity.this, ParkingClient.class);
-        bindService(i, new ServiceConnection() {
+	}
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                Log.w("Disconnected " + name);
-                mClient = null;//TODO
-            }
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.e("++ ON START ++");
+	}
 
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder binder) {
-                Log.w("Connected " + name);
-                mClient = ((ParkingClient.MyBinder) binder).getClient(mHandler);
-            }
-        }, Context.BIND_AUTO_CREATE);
+	@Override
+	public synchronized void onResume() {
+		super.onResume();
+		Log.e("+ ON RESUME +");
+	}
 
-    }
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 */
+	private void initView() {
+		buttonSignin = (Button) findViewById(R.id.button_signin);
+		buttonSignin.setOnClickListener(this);
+		topLayout = (FrameLayout) findViewById(R.id.topfl_container);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e("++ ON START ++");
-    }
+	}
 
-    @Override
-    public synchronized void onResume() {
-        super.onResume();
-        Log.e("+ ON RESUME +");
-    }
+	@Override
+	public synchronized void onPause() {
+		super.onPause();
+		Log.e("- ON PAUSE -");
+	}
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
-    private void initView() {
-        buttonSignin = (Button) findViewById(R.id.button_signin);
-        buttonSignin.setOnClickListener(this);
-        topLayout = (FrameLayout) findViewById(R.id.topfl_container);
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.e("-- ON STOP --");
+	}
 
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// Stop the Bluetooth chat services
+		if (mChatService != null) {
+			mChatService.stop();
+		}
+		Log.e("--- ON DESTROY ---");
+	}
 
-    @Override
-    public synchronized void onPause() {
-        super.onPause();
-        Log.e("- ON PAUSE -");
-    }
+	// The Handler that gets information back
+	private final Handler mHandler = new Handler() {
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e("-- ON STOP --");
-    }
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MessageConst.MessageType.MESSAGE_FROM_SERVER:
+				f.refreshUI((ClientServerMessage) msg.obj);
+				break;
+			case MESSAGE_NEW_LOCATION:
+				// zxb
+				// some message new Tracer
+				Tracer mTracer = Tracer.getInstance(getApplicationContext());
+				// some message new Park
+				Park mNewPark = new Park();
+				mNewPark.setParkStratTime(mTracer.getRequestLocation()
+						.getTime());
+				mNewPark.setParkLatitude(mTracer.getRequestLocation()
+						.getLatitude());
+				mNewPark.setParkLongitude(mTracer.getRequestLocation()
+						.getLongitude());
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Stop the Bluetooth chat services
-        if (mChatService != null) {
-            mChatService.stop();
-        }
-        Log.e("--- ON DESTROY ---");
-    }
+				// save in Client DB
+				break;
+			case MESSAGE_READ_LOCATION_RECORD:
+				// zxb
+				// some message read record form DB;
+				// Tracer mTracer =
+				// Tracer.getInstance(getApplicationContext());
+				// some message new Park
+				Park mLastPark = new Park();
+				mLastPark.setParkStratTime(0);// TODO
+				mLastPark.setParkLatitude(0);// TODO
+				mLastPark.setParkLongitude(0);// TODO
+				// read data from HardWare,analysis data,find the end time
+				// of last park record.
+				mLastPark.setParkEndTime(0);// TODO
+				break;
+			}
+		}
+	};
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.option_menu, menu);
+		return true;
+	}
 
-    // The Handler that gets information back
-    private final Handler mHandler = new Handler() {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.secure_connect_scan:
+			return true;
+		case R.id.insecure_connect_scan:
+			return true;
+		case R.id.discoverable:
+			return true;
+		}
+		return false;
+	}
 
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MessageConst.MessageType.MESSAGE_FROM_SERVER:
-                    f.refreshUI((AMessage) msg.obj);
-                    break;
-                case MESSAGE_NEW_LOCATION:
-                    // zxb
-                    // some message new Tracer
-                    Tracer mTracer = Tracer.getInstance(getApplicationContext());
-                    // some message new Park
-                    Park mNewPark = new Park();
-                    mNewPark.setParkStratTime(mTracer.getRequestLocation().getTime());
-                    mNewPark.setParkLatitude(mTracer.getRequestLocation().getLatitude());
-                    mNewPark.setParkLongitude(mTracer.getRequestLocation().getLongitude());
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 * @param v
+	 */
+	@Override
+	public void onClick(View v) {
+		showFragment(v.getId());
+	}
 
-                    // save in Client DB
-                    break;
-                case MESSAGE_READ_LOCATION_RECORD:
-                    // zxb
-                    // some message read record form DB;
-                    // Tracer mTracer =
-                    // Tracer.getInstance(getApplicationContext());
-                    // some message new Park
-                    Park mLastPark = new Park();
-                    mLastPark.setParkStratTime(0);// TODO
-                    mLastPark.setParkLatitude(0);// TODO
-                    mLastPark.setParkLongitude(0);// TODO
-                    // read data from HardWare,analysis data,find the end time
-                    // of last park record.
-                    mLastPark.setParkEndTime(0);// TODO
-                    break;
-            }
-        }
-    };
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 */
+	public void showFragment(int id) {
+		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+		switch (id) {
+		case R.id.button_signin:
+			f = new SigninFragment();
+			break;
+		case R.id.btn_signup:
+			f = new SignupFragment();
+			break;
+		case R.id.button_show_total:
+			f = new TotalFragment();
+			break;
+		case R.id.button_show_ad:
+			f = new AdFragment();
+			break;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu, menu);
-        return true;
-    }
+		default:
+			break;
+		}
+		t.replace(R.id.topfl_container, f).commit();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.secure_connect_scan:
-                return true;
-            case R.id.insecure_connect_scan:
-                return true;
-            case R.id.discoverable:
-                return true;
-        }
-        return false;
-    }
+		// int h = topLayout.getHeight();
+		// Animation inAnimotion = new TranslateAnimation(0, 0, -h, 0);
+		// inAnimotion.setFillAfter(true);
+		// inAnimotion.setDuration(1000);
+		// topLayout.startAnimation(inAnimotion);
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param v
-     */
-    @Override
-    public void onClick(View v) {
-        showFragment(v.getId());
-    }
+	}
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
-    public void showFragment(int id) {
-        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        switch (id) {
-            case R.id.button_signin:
-                f = new SigninFragment();
-                break;
-            case R.id.btn_signup:
-                f = new SignupFragment();
-                break;
-            case R.id.button_show_total:
-                f = new TotalFragment();
-                break;
-            case R.id.button_show_ad:
-                f = new AdFragment();
-                break;
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 * @param keyCode
+	 * @param event
+	 * @return
+	 */
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			topLayout.setVisibility(View.GONE);
+			return true;
 
-            default:
-                break;
-        }
-        t.replace(R.id.topfl_container, f).commit();
-
-//        int h = topLayout.getHeight();
-//        Animation inAnimotion = new TranslateAnimation(0, 0, -h, 0);
-//        inAnimotion.setFillAfter(true);
-//        inAnimotion.setDuration(1000);
-//        topLayout.startAnimation(inAnimotion);
-
-    }
-
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                topLayout.setVisibility(View.GONE);
-                break;
-
-            default:
-                break;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
+		default:
+			break;
+		}
+		return super.onKeyUp(keyCode, event);
+	}
 
 }
