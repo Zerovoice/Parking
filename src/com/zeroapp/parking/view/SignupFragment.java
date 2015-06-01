@@ -13,6 +13,9 @@
 
 package com.zeroapp.parking.view;
 
+import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.utils.Log;
+
 /**
  * <p>
  * Title: TODO.
@@ -25,5 +28,21 @@ package com.zeroapp.parking.view;
  * @version $Id$
  */
 public class SignupFragment extends BaseFragment {
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param msg
+     */
+    @Override
+    public void refreshUI(AMessage msg) {
+        Log.i("");
+
+    }
 
 }
