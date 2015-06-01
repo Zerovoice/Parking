@@ -9,7 +9,6 @@
         android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -29,8 +28,6 @@
             android:label="@string/select_device"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:configChanges="orientation|keyboardHidden" />
-        <service
-            android:name="com.zeroapp.parking.client.ParkingClient"/>
     </application>
 
 </manifest>

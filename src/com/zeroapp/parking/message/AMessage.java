@@ -13,7 +13,6 @@
 
 package com.zeroapp.parking.message;
 
-import java.io.Serializable;
 
 /**
  * <p>Title: TODO.</p>
@@ -23,12 +22,8 @@ import java.io.Serializable;
  * @version $Id$
  */
 
-public abstract class AMessage implements Serializable {
+public abstract class AMessage {
 
-    /**
-     * TODO
-     */
-    private static final long serialVersionUID = -3333863840063595999L;
     private int mMessageResult = -1;
     private int mMessageType = -1;
     private String mMessageContent = "";
