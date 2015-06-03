@@ -87,7 +87,7 @@ public class ParkingClient extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-        connectToServer();
+//        connectToServer();
 		return mBinder;
 	}
 
