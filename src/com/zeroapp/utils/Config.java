@@ -27,7 +27,7 @@ package com.zeroapp.utils;
 
 public class Config {
 
-    public static final String HOST_ADRESS = "192.168.100.19";
-	public static final int HOST_PORT = 8080;
+	public static final String HOST_ADRESS = "rwathena.eicp.net";//"192.168.1.100";//
+	public static final int HOST_PORT = 20058;
 
 }

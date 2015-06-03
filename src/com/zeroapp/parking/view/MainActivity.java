@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Process;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -37,7 +36,7 @@ import com.zeroapp.parking.bluetooth.BluetoothChatService;
 import com.zeroapp.parking.client.ParkingClient;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
-import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
@@ -162,7 +161,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MessageConst.MessageType.MESSAGE_FROM_SERVER:
-                    f.refreshUI((AMessage) msg.obj);
+				f.refreshUI((ClientServerMessage) msg.obj);
 				break;
 			case MESSAGE_NEW_LOCATION:
 				// zxb
@@ -207,41 +206,26 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-            case R.id.secure_connect_scan:
-                return true;
-//            case R.id.insecure_connect_scan:
-//                return true;
-            case R.id.exit:
-                exitApp();
-                return true;
+		case R.id.secure_connect_scan:
+			return true;
+		case R.id.insecure_connect_scan:
+			return true;
+		case R.id.discoverable:
+			return true;
 		}
 		return false;
 	}
 
-	    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
-    private void exitApp() {
-        Process.killProcess(Process.myPid());
-
-    }
-
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param v
-     */
+	/**
+	 * <p>
+	 * Title: TODO.
+	 * </p>
+	 * <p>
+	 * Description: TODO.
+	 * </p>
+	 * 
+	 * @param v
+	 */
 	@Override
 	public void onClick(View v) {
 		showFragment(v.getId());
@@ -308,6 +292,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		}
 		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			finish();
+		}
+		return false;
 	}
 
 }

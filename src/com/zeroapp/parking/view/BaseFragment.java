@@ -14,7 +14,8 @@ package com.zeroapp.parking.view;
 
 import android.support.v4.app.Fragment;
 
-import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
+import com.zeroapp.utils.Log;
 
 /**
  * <p>
@@ -27,8 +28,10 @@ import com.zeroapp.parking.message.AMessage;
  * @author Alex(zeroapp@126.com) 2015-5-28.
  * @version $Id$
  */
-public abstract class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment {
 
-    public abstract void refreshUI(AMessage msg);
+	public void refreshUI(ClientServerMessage msg) {
+		Log.i("refreshUI");
+	}
 
 }
