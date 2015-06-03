@@ -13,7 +13,6 @@
 
 package com.zeroapp.parking.message;
 
-import java.io.Serializable;
 
 /**
  * <p>
@@ -26,48 +25,11 @@ import java.io.Serializable;
  * @author Alex(zeroapp@126.com) 2015-5-28.
  * @version $Id$
  */
-public class ClientServerMessage implements Serializable {
+public class ClientServerMessage extends AMessage {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5820703490635153091L;
-
-	private int mMessageResult = -1;
-	private int mMessageType = -1;
-	private String mMessageContent = "";
-	private long mMessageSendTime = 0;
-
-	public int getMessageResult() {
-		return mMessageResult;
-	}
-
-	public void setMessageResult(int messageResult) {
-		mMessageResult = messageResult;
-	}
-
-	public int getMessageType() {
-		return mMessageType;
-	}
-
-	public void setMessageType(int messageType) {
-		mMessageType = messageType;
-	}
-
-	public String getMessageContent() {
-		return mMessageContent;
-	}
-
-	public void setMessageContent(String messageContent) {
-		mMessageContent = messageContent;
-	}
-
-	public long getMessageSendTime() {
-		return mMessageSendTime;
-	}
-
-	public void setMessageSendTime(long messageSendTime) {
-		mMessageSendTime = messageSendTime;
-	}
+    /**
+     * TODO
+     */
+    private static final long serialVersionUID = -5034329604370945404L;
 
 }

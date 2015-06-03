@@ -23,24 +23,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
-import com.zeroapp.utils.Config;
 import com.zeroapp.utils.Log;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 /**
  * <p>
  * Title: TODO.
@@ -78,31 +65,14 @@ public class SigninFragment extends BaseFragment {
 		editTextPwd = (EditText) mainView.findViewById(R.id.et_password);
 		buttonSingin = (Button) mainView.findViewById(R.id.btn_signin);
 		buttonSingup = (Button) mainView.findViewById(R.id.btn_signup);
-
-		
 		buttonSingin.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-//				ClientServerMessage m = new ClientServerMessage();
-//				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-//				m.setMessageContent("test");
-//				mainActivity.mClient.sendMessageToServer(m);
-				final String host = Config.HOST_ADRESS; 
-				final int port = Config.HOST_PORT; 
-				final int messageSize = 20; 
-				new Thread(){
-					@Override
-					public void run(){
-						try {
-							new ObjectTransferClient(host, port, messageSize).run();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					}.start();
-	
+                ClientServerMessage m = new ClientServerMessage();
+				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+				m.setMessageContent("test");
+				mainActivity.mClient.sendMessageToServer(m);
 
 			}
 		});
@@ -116,4 +86,21 @@ public class SigninFragment extends BaseFragment {
 		});
 		return mainView;
 	}
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param msg
+     */
+    @Override
+    public void refreshUI(AMessage msg) {
+        Log.i("");
+
+    }
+
 }

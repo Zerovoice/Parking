@@ -13,6 +13,8 @@
 
 package com.zeroapp.parking.view;
 
+import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.utils.Log;
 
 
 /**
@@ -27,5 +29,20 @@ package com.zeroapp.parking.view;
  * @version $Id$
  */
 public class AdFragment extends BaseFragment {
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param msg
+     */
+    @Override
+    public void refreshUI(AMessage msg) {
+        Log.i("");
+    }
 
 }

@@ -13,6 +13,12 @@
 
 package com.zeroapp.parking.client;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.IBinder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -20,12 +26,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Config;
@@ -70,7 +71,6 @@ public class ParkingClient extends Service {
 	public void onCreate() {
 		super.onCreate();
 		Log.d("");
-		connectToServer();
 	}
 
 	/**
@@ -87,18 +87,53 @@ public class ParkingClient extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
+        connectToServer();
 		return mBinder;
 	}
 
+
 	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 */
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param intent
+     */
+    @Override
+    public void onRebind(Intent intent) {
+        Log.e("");
+        super.onRebind(intent);
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param intent
+     * @return
+     */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.e("");
+        return super.onUnbind(intent);
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     */
 	@Override
 	public void onDestroy() {
 		Log.e("");
@@ -112,7 +147,6 @@ public class ParkingClient extends Service {
 					mSocket.getOutputStream());
 			oos.writeObject(m);
 			oos.flush();
-//			oos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
@@ -172,7 +206,7 @@ public class ParkingClient extends Service {
 	 * 
 	 * @param message
 	 */
-	private void handleMessage(ClientServerMessage message) {
+    private void handleMessage(AMessage message) {
 		Log.d("content: " + message.getMessageContent());
 		mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_FROM_SERVER,
 				message).sendToTarget();
