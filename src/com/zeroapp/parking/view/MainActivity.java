@@ -92,14 +92,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
-				Log.w("Disconnected " + name);
+                Log.e("Disconnected " + name);
 				mClient = null;// TODO
 			}
 
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder binder) {
-				Log.w("Connected " + name);
-				mClient = ((ParkingClient.MyBinder) binder).getClient(mHandler);
+                Log.d("Connected " + name);
+                mClient = ParkingClient.getClient(mHandler);
+//				mClient = ((ParkingClient.MyBinder) binder).getClient(mHandler);
 			}
 		}, Context.BIND_AUTO_CREATE);
 

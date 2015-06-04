@@ -23,11 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ObjectTransferClient;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
-import com.zeroapp.utils.Config;
 import com.zeroapp.utils.Log;
 
 /**
@@ -74,21 +72,27 @@ public class SigninFragment extends BaseFragment {
                 final ClientServerMessage m = new ClientServerMessage();
 				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
 				m.setMessageContent("test");
-                final String host = Config.HOST_ADRESS;
-                final int port = Config.HOST_PORT;
-//				mainActivity.mClient.sendMessageToServer(m);
-                new Thread() {
+//                final String host = Config.HOST_ADRESS;
+//                final int port = Config.HOST_PORT;
+//                Log.i(ParkingClient.getClient() + "");
+//                ParkingClient.getClient().receiverMessage(m);
 
-                    @Override
-                    public void run() {
-                        try {
-                            new ObjectTransferClient(host, port, m).run();
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
+                mainActivity.mClient.sendMessageToServer(m);
+//                mainActivity.mClient.getChannel().pipeline()
+//                        .addLast(new ObjectEncoder(), new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)), new Messager(mainActivity.mClient, m));
+
+//                new Thread() {
+//
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            new ObjectTransferClient(host, port, m).run();
+//                        } catch (InterruptedException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }.start();
 
 			}
 		});

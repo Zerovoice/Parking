@@ -24,19 +24,21 @@ import com.zeroapp.utils.Log;
  * <p>Title: TODO.</p>
  * <p>Description: TODO.</p>
  *
- * @author Alex(zeroapp@126.com) 2015-6-3.
+ * @author Alex(zeroapp@126.com) 2015-6-4.
  * @version $Id$
  */
 
-public class ObjectTransferClientHandler extends ChannelInboundHandlerAdapter {
+public class Messager extends ChannelInboundHandlerAdapter {
 
     private AMessage mMsg = null;
+    private ParkingClient mClient = null;
 
     /**
      * Creates a client-side handler.
      */
-    public ObjectTransferClientHandler(AMessage msg) {
-        mMsg =msg;
+    public Messager(ParkingClient client, AMessage msg) {
+        mClient = client;
+        mMsg = msg;
     }
 
     /**
@@ -53,6 +55,7 @@ public class ObjectTransferClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
+        Log.d("channelActive");
         ctx.writeAndFlush(mMsg);
     }
 
@@ -70,9 +73,8 @@ public class ObjectTransferClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//        super.channelRead(ctx, msg);
-//        Object obj = MessageReader.readMessage(msg);
-        Log.d(((ClientServerMessage) msg).getMessageContent());
+        Log.d("channelRead");
+        mClient.handleMessage((ClientServerMessage) msg);
     }
 
     /**
