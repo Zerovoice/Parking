@@ -13,193 +13,79 @@
 
 package com.zeroapp.parking.client;
 
-import android.app.Service;
-import android.content.Intent;
 import android.os.Handler;
-import android.os.IBinder;
-
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import android.os.Looper;
+import android.os.Message;
 
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
-import com.zeroapp.parking.message.MessageConst;
-import com.zeroapp.utils.Config;
 import com.zeroapp.utils.Log;
 
+
+
 /**
- * <p>
- * Title: ParkingClient.
- * </p>
- * <p>
- * Description: 处理消息的服务.
- * </p>
- * 
- * @author Bobby Zou(zouxiaobo@hisense.com) 2015-5-28.
+ * <p>Title: TODO.</p>
+ * <p>Description: TODO.</p>
+ *
+ * @author Alex(zeroapp@126.com) 2015-6-4.
  * @version $Id$
  */
 
-public class ParkingClient extends Service {
+public class ParkingClient extends Thread {
 
-    private static Handler mHandler = null;
-	private Socket mSocket = null;
     private static ParkingClient mClient = null;
-    
-    public static ParkingClient getClient(Handler handler) {
-        mHandler = handler;
+    private Handler mClientHandler = null;
+
+    private ParkingClient() {
+    }
+
+    public static ParkingClient getClient() {
         if (mClient == null) {
             mClient = new ParkingClient();
         }
         return mClient;
     }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Log.d("");
-
-	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-        return null;
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.e("");
-		super.onDestroy();
-	}
-
-    public int sendMessageToServer(ClientServerMessage m) {
-		Log.d("m content  " + m.getMessageContent());
-        Messager mer = new Messager(ParkingClient.getClient(mHandler), m);
-        ChannelThread t = new ChannelThread(mer);
-        t.start();
-        // connectToServerWithNetty();
-//        Log.d("mChannel  " + mChannel);
-//        mChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)), new Messager(ParkingClient.getClient(), m));
-//		try {
-//			ObjectOutputStream oos = new ObjectOutputStream(
-//					mSocket.getOutputStream());
-//			oos.writeObject(m);
-//			oos.flush();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return 0;
-//		}
-		return 1;
-	}
-
+    public void receiveMessage(AMessage m) {
+//        Log.d("1");
+        MessageBox box = new MessageBox(mClientHandler, m);
+//        Log.d("2");
+        PostMan man = new PostMan(box);
+//        Log.d("3");
+        mClientHandler.post(man);
+//        Log.d("4");
+    }
 
     /**
      * <p>
      * Title: TODO.
      * </p>
      * <p>
-     * Description: use Netty to get connect to Server. use SocketChannel to
-     * pass Message between Client&Server.
+     * Description: TODO.
      * </p>
      * 
      */
-    private void connectToServerWithNetty() {
-        new Thread(new Runnable() {
+    @Override
+    public void run() {
+        Log.d("");
+        Looper.prepare();
+        mClientHandler = new Handler() {
 
             @Override
-            public void run() {
-                Bootstrap bootstrap = new Bootstrap();
-                EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-                try {
-                    bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 1:
+                        ClientServerMessage m = (ClientServerMessage) msg.obj;
+                        Log.d(m.getMessageContent() + "");
+                        break;
 
-                        @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
-//                            mChannel = ch;
-                            // ClientServerMessage m = new
-                            // ClientServerMessage();
-                            // m.setMessageContent("test1");
-//                            mChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)), new Messager(ParkingClient.this, m));
-                        }
-                    });
-                    ChannelFuture future = bootstrap.connect(Config.HOST_ADRESS, Config.HOST_PORT).sync();
-                    future.channel().closeFuture().sync();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    eventLoopGroup.shutdownGracefully();
+                    default:
+                        break;
                 }
-
             }
-        }).start();
-
+        };
+        Log.d("" + mClientHandler);
+        Looper.loop();
     }
 
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 */
-	private void connectToServer() {
-		mSocket = new Socket();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					mSocket.connect(new InetSocketAddress(Config.HOST_ADRESS,
-							Config.HOST_PORT), 2000);
-					Log.i("connected to server");
-				} catch (IOException e) {
-					Log.i("SocketTimeoutException ");
-					e.printStackTrace();
-					// TODO what shall we do if timeout
-				}
-				while (true) {
-					ObjectInputStream ois = null;
-					ClientServerMessage message;
-					InputStream is;
-					try {
-						is = mSocket.getInputStream();
-						ois = new ObjectInputStream(is);
-						message = (ClientServerMessage) ois.readObject();
-						handleMessage(message);
-					} catch (Exception e) {
-						// e.printStackTrace();
-					}
-				}
-
-			}
-		}).start();
-
-	}
-
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 * @param message
-	 */
-    public void handleMessage(AMessage message) {
-		Log.d("content: " + message.getMessageContent());
-        mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_FROM_SERVER, message).sendToTarget();
-
-	}
 }

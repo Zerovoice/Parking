@@ -29,8 +29,6 @@
             android:label="@string/select_device"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:configChanges="orientation|keyboardHidden" />
-        <service
-            android:name="com.zeroapp.parking.client.ParkingClient"/>
     </application>
 
 </manifest>

@@ -12,13 +12,8 @@
  */
 package com.zeroapp.parking.view;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Process;
 import android.support.v4.app.FragmentActivity;
@@ -38,6 +33,7 @@ import com.zeroapp.parking.client.ParkingClient;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
 import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
@@ -63,7 +59,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private FrameLayout topLayout = null;
 	private Button buttonSignin;
 
-	ParkingClient mClient = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,24 +81,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * 
 	 */
 	private void startClient() {
-		Intent i = new Intent(MainActivity.this, ParkingClient.class);
-		startService(i);
-		bindService(i, new ServiceConnection() {
-
-			@Override
-			public void onServiceDisconnected(ComponentName name) {
-                Log.e("Disconnected " + name);
-				mClient = null;// TODO
-			}
-
-			@Override
-			public void onServiceConnected(ComponentName name, IBinder binder) {
-                Log.d("Connected " + name);
-                mClient = ParkingClient.getClient(mHandler);
-//				mClient = ((ParkingClient.MyBinder) binder).getClient(mHandler);
-			}
-		}, Context.BIND_AUTO_CREATE);
-
+        ParkingClient client = ParkingClient.getClient();
+        client.start();
 	}
 
 	@Override
@@ -116,6 +95,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public synchronized void onResume() {
 		super.onResume();
 		Log.e("+ ON RESUME +");
+		final ClientServerMessage m = new ClientServerMessage();
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+        m.setMessageContent("test");
+        ParkingClient.getClient().receiveMessage(m);
 	}
 
 	/**
