@@ -55,8 +55,10 @@ public class MessageBox extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        Log.d("");
-        ctx.writeAndFlush(mMsg);
+        Log.d("" + mMsg);
+        if (mMsg != null) {
+            ctx.writeAndFlush(mMsg);
+        }
     }
 
     /**
@@ -74,9 +76,11 @@ public class MessageBox extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         Log.d("" + mHandler);
-        ClientServerMessage m = (ClientServerMessage) msg;
-        Log.d("" + m.getMessageContent());
-        mHandler.obtainMessage(1, (ClientServerMessage) msg).sendToTarget();
+        if (msg != null) {
+            ClientServerMessage m = (ClientServerMessage) msg;
+            Log.d("" + m.getMessageContent());
+            mHandler.obtainMessage(1, (ClientServerMessage) msg).sendToTarget();
+        }
     }
 
     /**

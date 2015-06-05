@@ -25,6 +25,7 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import com.zeroapp.utils.Config;
+import com.zeroapp.utils.Log;
 
 
 /**
@@ -46,6 +47,7 @@ public class PostMan implements Runnable {
 
     @Override
     public void run() {
+        Log.d("");
         Bootstrap bootstrap = new Bootstrap();
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         try {
