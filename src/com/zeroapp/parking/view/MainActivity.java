@@ -29,20 +29,19 @@ import android.widget.FrameLayout;
 
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.bluetooth.BluetoothChatService;
-import com.zeroapp.parking.client.ParkingClient;
+import com.zeroapp.parking.client.MessageBox;
+import com.zeroapp.parking.client.PostMan;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
-import com.zeroapp.parking.message.AMessage;
-import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
 /**
  * <p>
- * Title: TODO.
+ * Title: MainActivity.
  * </p>
  * <p>
- * Description: TODO.
+ * Description: MainActivity.
  * </p>
  * 
  * @author Alex(zeroapp@126.com) 2015-5-27.
@@ -58,7 +57,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private BaseFragment f = null;
 	private FrameLayout topLayout = null;
 	private Button buttonSignin;
-
+    private MessageBox mBox;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +67,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		// Set up the window layout
 		setContentView(R.layout.activity_main);
 		initView();
-		startClient();
+        bindServer();
 	}
 
 	/**
@@ -80,9 +79,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * </p>
 	 * 
 	 */
-	private void startClient() {
-        ParkingClient client = ParkingClient.getClient();
-        client.start();
+    private void bindServer() {
+        mBox = new MessageBox(mHandler);
+        PostMan man = new PostMan(mBox);
+        new Thread(man).start();
 	}
 
 	@Override
@@ -90,37 +90,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onStart();
 		Log.e("++ ON START ++");
 	}
+    public MessageBox getBox() {
+        return mBox;
+    }
+    public void setBox(MessageBox box) {
+        this.mBox = box;
+    }
 
-	@Override
+    @Override
 	public synchronized void onResume() {
 		super.onResume();
 		Log.e("+ ON RESUME +");
-		final ClientServerMessage m = new ClientServerMessage();
-        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-        m.setMessageContent("test");
-        ParkingClient.getClient().receiveMessage(m);
 	}
 
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 */
 	private void initView() {
 		buttonSignin = (Button) findViewById(R.id.button_signin);
 		buttonSignin.setOnClickListener(this);
 		topLayout = (FrameLayout) findViewById(R.id.topfl_container);
 
-	}
-
-	@Override
-	public synchronized void onPause() {
-		super.onPause();
-		Log.e("- ON PAUSE -");
 	}
 
 	@Override
@@ -146,7 +133,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MessageConst.MessageType.MESSAGE_FROM_SERVER:
-                    f.refreshUI((AMessage) msg.obj);
+                    Log.i("handleMessage 3");
+//                    f.refreshUI((AMessage) msg.obj);
 				break;
 			case MESSAGE_NEW_LOCATION:
 				// zxb
@@ -201,45 +189,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 		return false;
 	}
-
-	    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
     private void exitApp() {
         Process.killProcess(Process.myPid());
 
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param v
-     */
 	@Override
 	public void onClick(View v) {
 		showFragment(v.getId());
 	}
-
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 */
 	public void showFragment(int id) {
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 		switch (id) {
@@ -269,18 +227,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	}
 
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 * @param keyCode
-	 * @param event
-	 * @return
-	 */
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {

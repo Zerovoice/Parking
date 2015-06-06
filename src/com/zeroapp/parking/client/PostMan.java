@@ -59,8 +59,7 @@ public class PostMan implements Runnable {
                 }
             });
             ChannelFuture future = bootstrap.connect(Config.HOST_ADRESS, Config.HOST_PORT).sync();
-            // 注释掉,别问为什么,我也不知道!!!
-//            future.channel().closeFuture().sync();
+            future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ParkingClient;
+import com.zeroapp.parking.client.MessageBox;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -72,8 +72,9 @@ public class SigninFragment extends BaseFragment {
 			public void onClick(View v) {
                 final ClientServerMessage m = new ClientServerMessage();
 				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-                m.setMessageContent("test click");
-                ParkingClient.getClient().receiveMessage(m);
+                m.setMessageContent("click");
+                MessageBox b = mainActivity.getBox();
+                b.receiveMessage(m);
 
 			}
 		});
