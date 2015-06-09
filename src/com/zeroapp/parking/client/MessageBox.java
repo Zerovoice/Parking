@@ -44,7 +44,7 @@ public class MessageBox extends ChannelInboundHandlerAdapter {
         mHandler = handler;
     }
 
-    public void receiveMessage(ClientServerMessage m) {
+    public void sendMessage(ClientServerMessage m) {
         if (mctx != null)
         mctx.writeAndFlush(m);
 

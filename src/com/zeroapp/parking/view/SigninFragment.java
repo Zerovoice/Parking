@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.MessageBox;
 import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.message.AMessage;
@@ -78,8 +77,7 @@ public class SigninFragment extends BaseFragment {
                 final ClientServerMessage m = new ClientServerMessage();
 				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
                 m.setMessageContent(ObjToContent.getContent(u));
-                MessageBox b = mainActivity.getBox();
-                b.receiveMessage(m);
+                mainActivity.getBox().sendMessage(m);
 
 			}
 		});
@@ -87,7 +85,18 @@ public class SigninFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-				mainActivity.showFragment(v.getId());
+
+                User u = new User();
+                u.setAccount("zxb2");
+                u.setPassword("1234");
+                u.setName("Alex");
+                u.setIdentityNum("4454433332");
+                u.setAccountBanlance(1000000);
+                final ClientServerMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
+                m.setMessageContent(ObjToContent.getContent(u));
+                mainActivity.getBox().sendMessage(m);
+//				mainActivity.showFragment(v.getId());
 
 			}
 		});
