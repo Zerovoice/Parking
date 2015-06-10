@@ -13,7 +13,16 @@
 
 package com.zeroapp.parking.view;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.zeroapp.parking.R;
 import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.utils.Log;
 
 
 /**
@@ -26,6 +35,37 @@ import com.zeroapp.parking.message.AMessage;
 
 public class UserInfoFragment extends BaseFragment {
 
+    private MainActivity mainActivity;
+    private View mainView;
+    private TextView name;
+    private TextView phoneNum;
+    private TextView IdNum;
+
+    @Override
+    public void onAttach(Activity activity) {
+        Log.i("onAttach");
+        super.onAttach(activity);
+        mainActivity = (MainActivity) getActivity();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("onCreateView");
+        mainView = inflater.inflate(R.layout.fragment_user, null);
+        name = (TextView) mainView.findViewById(R.id.user_name);
+        phoneNum = (TextView) mainView.findViewById(R.id.user_phone);
+        IdNum = (TextView) mainView.findViewById(R.id.user_idnum);
+        name.setText(mainActivity.me.getName());
+        phoneNum.setText(mainActivity.me.getPhoneNum());
+        IdNum.setText(mainActivity.me.getIdentityNum());
+        return mainView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     /**
      * <p>Title: TODO.</p>
      * <p>Description: TODO.</p>
@@ -34,7 +74,7 @@ public class UserInfoFragment extends BaseFragment {
      */
     @Override
     public void refreshUI(AMessage msg) {
-        // TODO Auto-generated method stub
+        Log.i("");
 
     }
 

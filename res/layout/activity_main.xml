@@ -21,23 +21,28 @@
         android:orientation="horizontal" 
         android:visibility="gone">
 
-       <!-- <Button
-            android:id="@+id/button_signin"
+       <Button
+            android:id="@+id/button_user_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signin" />
-             --> 
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/userinfo" />
 
         <Button
             android:id="@+id/button_show_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/showtotal" />
 
         <Button
             android:id="@+id/button_show_ad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/showad" />
     </LinearLayout>
 

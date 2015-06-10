@@ -122,7 +122,6 @@ public class SigninFragment extends BaseFragment {
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-
                     mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
                     msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();

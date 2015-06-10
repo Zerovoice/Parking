@@ -12,6 +12,7 @@
  */
 package com.zeroapp.parking.view;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -204,6 +205,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 balance.setText(me.getAccountBanlance() + "");
                 // show buttons
                 buttonLayout.setVisibility(View.VISIBLE);
+                // 设置ActionBar
+                ActionBar actionBar = getActionBar();
+                // actionBar.setDisplayShowHomeEnabled(false);
+                // actionBar.setDisplayShowTitleEnabled(false);
+                actionBar.setTitle(me.getName());
+                // actionBar.setSubtitle("zxb");
+
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                 break;
 
