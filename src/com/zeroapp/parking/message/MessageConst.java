@@ -35,7 +35,7 @@ public class MessageConst {
     public class MessageType {
 
         // Local message
-        public static final int MESSAGE_LOCAL = 1;
+        public static final int MESSAGE_UI = 1;
         // Message types sent to server
         public static final int MESSAGE_TO_SERVER = 2;
         // Message types sent from server
@@ -62,6 +62,7 @@ public class MessageConst {
         public static final int MSG_TYPE_BLUETOOTH_WRITE = 13;
         public static final int MSG_TYPE_BLUETOOTH_DEVICE_NAME = 14;
         public static final int MSG_TYPE_BLUETOOTH_TOAST = 15;
+        public static final int MSG_TYPE_UI_SHOW_USER_INFO = 16;
 
     }
 

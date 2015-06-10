@@ -12,6 +12,7 @@
  */
 package com.zeroapp.parking.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,13 +27,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.bluetooth.BluetoothChatService;
 import com.zeroapp.parking.client.MessageBox;
+import com.zeroapp.parking.client.OnConnectStateChangeListener;
 import com.zeroapp.parking.client.PostMan;
+import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
@@ -47,17 +53,22 @@ import com.zeroapp.utils.Log;
  * @author Alex(zeroapp@126.com) 2015-5-27.
  * @version $Id$
  */
-public class MainActivity extends FragmentActivity implements OnClickListener {
+public class MainActivity extends FragmentActivity implements OnClickListener, OnConnectStateChangeListener {
 
 	protected static final int MESSAGE_NEW_LOCATION = 111110;// zxb
 	protected static final int MESSAGE_READ_LOCATION_RECORD = 122220;// zxb
+    public static final String PREF_NAME = "Parking";
+    public SharedPreferences prefNoVersion = null;
+    public User me = null;
 
 	// Member object for the chat services
 	private BluetoothChatService mChatService = null;
-	private BaseFragment f = null;
-	private FrameLayout topLayout = null;
-	private Button buttonSignin;
     private MessageBox mBox;
+	private BaseFragment f = null;
+    private FrameLayout fLayout = null;
+    private TextView balance = null;
+    private LinearLayout buttonLayout = null;
+	private Button buttonSignin;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,28 +79,35 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		initView();
         bindServer();
+        initUser();
 	}
-
-	/**
-	 * <p>
-	 * Title: TODO.
-	 * </p>
-	 * <p>
-	 * Description: TODO.
-	 * </p>
-	 * 
-	 */
-    private void bindServer() {
-        mBox = new MessageBox(mHandler);
-        PostMan man = new PostMan(mBox);
-        new Thread(man).start();
-	}
-
 	@Override
 	public void onStart() {
 		super.onStart();
 		Log.e("++ ON START ++");
 	}
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        Log.e("+ ON RESUME +");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("-- ON STOP --");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth chat services
+        if (mChatService != null) {
+            mChatService.stop();
+        }
+        Log.e("--- ON DESTROY ---");
+    }
     public MessageBox getBox() {
         return mBox;
     }
@@ -97,45 +115,38 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         this.mBox = box;
     }
 
-    @Override
-	public synchronized void onResume() {
-		super.onResume();
-		Log.e("+ ON RESUME +");
-	}
-
 	private void initView() {
-		buttonSignin = (Button) findViewById(R.id.button_signin);
-		buttonSignin.setOnClickListener(this);
-		topLayout = (FrameLayout) findViewById(R.id.topfl_container);
-
+        fLayout = (FrameLayout) findViewById(R.id.topfl_container);
+        buttonLayout = (LinearLayout) findViewById(R.id.llayout_button);
+        balance = (TextView) findViewById(R.id.balance);
 	}
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.e("-- ON STOP --");
-	}
+    private void bindServer() {
+        mBox = new MessageBox(mHandler);
+        PostMan man = new PostMan(mBox);
+        man.setConnectStateChangeListener(this);
+        new Thread(man).start();
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// Stop the Bluetooth chat services
-		if (mChatService != null) {
-			mChatService.stop();
-		}
-		Log.e("--- ON DESTROY ---");
-	}
+    private void initUser() {
+        me = new User();
+        prefNoVersion = getApplicationContext().getSharedPreferences(PREF_NAME, 0);
+        me.setAccount(prefNoVersion.getString("account", null));
+        me.setPassword(prefNoVersion.getString("password", null));
+    }
 
 	// The Handler that gets information back
-	private final Handler mHandler = new Handler() {
+    public final Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MessageConst.MessageType.MESSAGE_FROM_SERVER:
-                    Log.i("handleMessage 3");
-//                    f.refreshUI((AMessage) msg.obj);
+                    f.refreshUI((AMessage) msg.obj);
 				break;
+                case MessageConst.MessageType.MESSAGE_UI:
+                    dealUIMessage((AMessage) msg.obj);
+                    break;
 			case MESSAGE_NEW_LOCATION:
 				// zxb
 				// some message new Tracer
@@ -176,7 +187,33 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		return true;
 	}
 
-	@Override
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param obj
+     */
+    protected void dealUIMessage(AMessage obj) {
+        switch (obj.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO:
+                // update balance
+                balance.setText(me.getAccountBanlance() + "");
+                // show buttons
+                buttonLayout.setVisibility(View.VISIBLE);
+                showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
             case R.id.secure_connect_scan:
@@ -200,24 +237,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 	public void showFragment(int id) {
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-		switch (id) {
-		case R.id.button_signin:
-			f = new SigninFragment();
-			break;
-		case R.id.btn_signup:
-			f = new SignupFragment();
-			break;
-		case R.id.button_show_total:
-			f = new TotalFragment();
-			break;
-		case R.id.button_show_ad:
-			f = new AdFragment();
-			break;
+        switch (id) {
+            case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
+                f = new SigninFragment();
+                break;
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO:
+                f = new UserInfoFragment();
+                break;
+            case R.id.btn_signup:
+                f = new SignupFragment();
+                break;
+            case R.id.button_show_total:
+                f = new TotalFragment();
+                break;
+            case R.id.button_show_ad:
+                f = new AdFragment();
+                break;
 
-		default:
-			break;
-		}
-		t.replace(R.id.topfl_container, f).commit();
+            default:
+                break;
+        }
+        t.replace(R.id.topfl_container, f).commit();
 
 		// int h = topLayout.getHeight();
 		// Animation inAnimotion = new TranslateAnimation(0, 0, -h, 0);
@@ -229,15 +269,26 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			topLayout.setVisibility(View.GONE);
-			return true;
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                fLayout.setVisibility(View.GONE);
+                return true;
 
-		default:
-			break;
-		}
-		return super.onKeyUp(keyCode, event);
+            default:
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
 	}
 
+    @Override
+    public void onConnect() {
+        Log.d("");
+        showFragment(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+
+    }
+    @Override
+    public void onDisconnect() {
+        // TODO Auto-generated method stub
+
+    }
 }

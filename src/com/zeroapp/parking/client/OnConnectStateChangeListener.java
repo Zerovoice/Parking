@@ -11,23 +11,21 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.utils;
+package com.zeroapp.parking.client;
 
 
 /**
- * <p>
- * Title: TODO.
- * </p>
- * <p>
- * Description: TODO.
- * </p>
- * 
- * @author Alex(zeroapp@126.com) 2015-5-28.
+ * <p>Title: TODO.</p>
+ * <p>Description: TODO.</p>
+ *
+ * @author Alex(zeroapp@126.com) 2015-6-10.
  * @version $Id$
  */
 
-public class Config {
+public interface OnConnectStateChangeListener {
 
-    public static final String HOST_ADRESS = "192.168.100.5";
-	public static final int HOST_PORT = 8080;
+    public void onConnect();
+
+    public void onDisconnect();
+
 }

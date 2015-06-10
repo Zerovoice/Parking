@@ -39,6 +39,7 @@ import com.zeroapp.utils.Log;
 public class PostMan implements Runnable {
 
     private MessageBox mBox = null;
+    private OnConnectStateChangeListener mConnectStateChangeListener = null;
 
     public PostMan(MessageBox box) {
         this.mBox = box;
@@ -59,13 +60,44 @@ public class PostMan implements Runnable {
                 }
             });
             ChannelFuture future = bootstrap.connect(Config.HOST_ADRESS, Config.HOST_PORT).sync();
+            mConnectStateChangeListener.onConnect();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            mConnectStateChangeListener.onDisconnect();
         } finally {
             eventLoopGroup.shutdownGracefully();
         }
 
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @return the l.
+     */
+    public OnConnectStateChangeListener getConnectStateChangeListener() {
+        return mConnectStateChangeListener;
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param l
+     *            the l to set.
+     */
+    public void setConnectStateChangeListener(OnConnectStateChangeListener l) {
+        this.mConnectStateChangeListener = l;
     }
 
 }

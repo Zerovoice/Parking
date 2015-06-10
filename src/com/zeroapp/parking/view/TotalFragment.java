@@ -13,7 +13,21 @@
 
 package com.zeroapp.parking.view;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.zeroapp.parking.R;
+import com.zeroapp.parking.common.ObjToContent;
+import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
+import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
 
@@ -29,6 +43,65 @@ import com.zeroapp.utils.Log;
  * @version $Id$
  */
 public class TotalFragment extends BaseFragment {
+
+    private View mainView;
+    private EditText editTextAccount;
+    private EditText editTextPwd;
+    private Button buttonSingin;
+    private Button buttonSingup;
+    private MainActivity mainActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+        Log.i("onAttach");
+        super.onAttach(activity);
+        mainActivity = (MainActivity) getActivity();
+        // reqData = new HashMap<String, Object>();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("onCreateView");
+        mainView = inflater.inflate(R.layout.fragment_total, null);
+        editTextAccount = (EditText) mainView.findViewById(R.id.et_account);
+        editTextPwd = (EditText) mainView.findViewById(R.id.et_password);
+        buttonSingin = (Button) mainView.findViewById(R.id.btn_signin);
+        buttonSingup = (Button) mainView.findViewById(R.id.btn_signup);
+        buttonSingin.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                User u = new User();
+                u.setAccount("zxb");
+                u.setPassword("123");
+                final ClientServerMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+                m.setMessageContent(ObjToContent.getContent(u));
+                mainActivity.getBox().sendMessage(m);
+
+            }
+        });
+        buttonSingup.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                User u = new User();
+                u.setAccount("zxb2");
+                u.setPassword("1234");
+                u.setName("Alex");
+                u.setIdentityNum("4454433332");
+                u.setAccountBanlance(1000000);
+                final ClientServerMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
+                m.setMessageContent(ObjToContent.getContent(u));
+                mainActivity.getBox().sendMessage(m);
+//              mainActivity.showFragment(v.getId());
+
+            }
+        });
+        return mainView;
+    }
 
     /**
      * <p>

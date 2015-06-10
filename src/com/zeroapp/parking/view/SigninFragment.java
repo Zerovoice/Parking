@@ -23,8 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.client.ContentToObj;
 import com.zeroapp.parking.common.ObjToContent;
-import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -50,12 +50,11 @@ public class SigninFragment extends BaseFragment {
 	private Button buttonSingup;
 	private MainActivity mainActivity;
 
-	@Override
+    @Override
 	public void onAttach(Activity activity) {
 		Log.i("onAttach");
 		super.onAttach(activity);
 		mainActivity = (MainActivity) getActivity();
-		// reqData = new HashMap<String, Object>();
 	}
 
 	@Override
@@ -71,13 +70,9 @@ public class SigninFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-                User u = new User();
-                u.setAccount("zxb");
-                u.setPassword("123");
-                final ClientServerMessage m = new ClientServerMessage();
-				m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-                m.setMessageContent(ObjToContent.getContent(u));
-                mainActivity.getBox().sendMessage(m);
+                mainActivity.me.setAccount(editTextAccount.getText().toString());
+                mainActivity.me.setPassword(editTextPwd.getText().toString());
+                sendMeToServer();
 
 			}
 		});
@@ -85,23 +80,31 @@ public class SigninFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-
-                User u = new User();
-                u.setAccount("zxb2");
-                u.setPassword("1234");
-                u.setName("Alex");
-                u.setIdentityNum("4454433332");
-                u.setAccountBanlance(1000000);
-                final ClientServerMessage m = new ClientServerMessage();
-                m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
-                m.setMessageContent(ObjToContent.getContent(u));
-                mainActivity.getBox().sendMessage(m);
-//				mainActivity.showFragment(v.getId());
-
+                mainActivity.showFragment(v.getId());
 			}
 		});
 		return mainView;
 	}
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 从SharedPreferences中取出了账号&密码;自动登录
+        if (mainActivity.me.getAccount() != null && mainActivity.me.getPassword() != null) {
+            mainView.setVisibility(View.INVISIBLE);
+            sendMeToServer();
+        } else {
+
+        }
+    }
+
+    private void sendMeToServer() {
+        ClientServerMessage m = new ClientServerMessage();
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+        m.setMessageContent(ObjToContent.getContent(mainActivity.me));
+        mainActivity.getBox().sendMessage(m);
+
+    }
 
     /**
      * <p>
@@ -116,6 +119,19 @@ public class SigninFragment extends BaseFragment {
     @Override
     public void refreshUI(AMessage msg) {
         Log.i("");
+        switch (msg.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
+                if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
+
+                    mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
+                    msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
+                }
+                break;
+
+            default:
+                break;
+        }
 
     }
 

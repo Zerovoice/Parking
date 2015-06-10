@@ -19,6 +19,7 @@
                 android:id="@+id/et_account"
                 android:layout_width="200dip"
                 android:layout_height="wrap_content"
+                android:inputType="number"
 	            android:maxLength="10"
 	            android:textSize="16sp"
 	            android:hint="输入账号"
@@ -41,6 +42,36 @@
                 android:inputType="textPassword"
                 android:background="@drawable/input_normal" />
         </LinearLayout>
+      <!--   <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <CheckBox
+                android:id="@+id/check_box_rem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/cb_check"
+                android:textColor="#4F4F4F"
+                android:textSize="16sp"
+                android:text="@string/rempwd" /> 
+           
+        </LinearLayout>-->
+        <!--
+         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <CheckBox
+                android:id="@+id/check_box_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/cb_check"
+                android:textColor="#4F4F4F"
+                android:textSize="16sp"
+                android:text="@string/autoin" />
+           
+        </LinearLayout>
+        -->
          
         <LinearLayout
             android:layout_width="wrap_content"
