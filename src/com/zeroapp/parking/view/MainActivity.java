@@ -31,11 +31,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.bluetooth.BluetoothChatService;
 import com.zeroapp.parking.client.MessageBox;
 import com.zeroapp.parking.client.OnConnectStateChangeListener;
 import com.zeroapp.parking.client.PostMan;
+import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.locator.Park;
 import com.zeroapp.parking.locator.Tracer;
@@ -61,6 +64,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     public static final String PREF_NAME = "Parking";
     public SharedPreferences prefNoVersion = null;
     public User me = null;
+    public List<CarInfo> myCars = null;
 
 	// Member object for the chat services
 	private BluetoothChatService mChatService = null;
@@ -120,6 +124,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         fLayout = (FrameLayout) findViewById(R.id.topfl_container);
         buttonLayout = (LinearLayout) findViewById(R.id.llayout_button);
         balance = (TextView) findViewById(R.id.balance);
+        findViewById(R.id.button_user_info).setOnClickListener(this);
+        findViewById(R.id.button_show_total).setOnClickListener(this);
+        findViewById(R.id.button_show_biddings).setOnClickListener(this);
 	}
 
     private void bindServer() {
@@ -258,8 +265,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             case R.id.button_show_total:
                 f = new TotalFragment();
                 break;
-            case R.id.button_show_ad:
-                f = new AdFragment();
+            case R.id.button_show_biddings:
+                f = new BiddingFragment();
+                break;
+            case R.id.button_user_info:
+                f = new UserInfoFragment();
                 break;
 
             default:

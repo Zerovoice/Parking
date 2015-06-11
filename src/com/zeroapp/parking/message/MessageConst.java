@@ -51,10 +51,11 @@ public class MessageConst {
         public static final int MSG_TYPE_USER_SIGN_IN = 3000;
         public static final int MSG_TYPE_USER_SIGN_UP = 3001;
         public static final int MSG_TYPE_USER_LIST_MONEY = 3002;
-        public static final int MSG_TYPE_USER_LIST_AD = 3003;
-        public static final int MSG_TYPE_USER_GET_AD = 3004;
-        public static final int MSG_TYPE_USER_QUIT_AD = 3005;
+        public static final int MSG_TYPE_USER_LIST_BIDDING = 3003;
+        public static final int MSG_TYPE_USER_SELECT_BIDDING = 3004;
+        public static final int MSG_TYPE_USER_DROP_BIDDING = 3005;
         public static final int MSG_TYPE_USER_SEND_PARK_INFO = 3006;
+        public static final int MSG_TYPE_USER_LIST_MYCARS = 3007;
 
         // Message types sent from the BluetoothChatService Handler
         public static final int MSG_TYPE_BLUETOOTH_STATE_CHANGE = 11;
@@ -63,6 +64,7 @@ public class MessageConst {
         public static final int MSG_TYPE_BLUETOOTH_DEVICE_NAME = 14;
         public static final int MSG_TYPE_BLUETOOTH_TOAST = 15;
         public static final int MSG_TYPE_UI_SHOW_USER_INFO = 16;
+
 
     }
 

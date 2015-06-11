@@ -5,7 +5,7 @@
     android:background="@drawable/login_button_nor" >
 
     <LinearLayout
-        android:id="@+id/ll_total"
+        android:id="@+id/ll_bidding"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" 
@@ -19,11 +19,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="我的: "
+                android:text="城市: "
                 android:textSize="36sp" />
 
             <TextView
-                android:id="@+id/wode_name"
+                android:id="@+id/city_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
@@ -38,11 +38,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="最近十天："
+                android:text="可选列表 ："
                 android:textSize="36sp" />
 
             <ListView
-                android:id="@+id/lv_total"
+                android:id="@+id/lv_biddings"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"

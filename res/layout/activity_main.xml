@@ -38,7 +38,7 @@
             android:text="@string/showtotal" />
 
         <Button
-            android:id="@+id/button_show_ad"
+            android:id="@+id/button_show_biddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

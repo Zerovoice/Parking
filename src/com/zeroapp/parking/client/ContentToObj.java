@@ -14,6 +14,9 @@
 package com.zeroapp.parking.client;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 import com.zeroapp.parking.common.Bidding;
 import com.zeroapp.parking.common.Business;
@@ -69,6 +72,24 @@ public class ContentToObj {
         Log.i("messageContent: " + messageContent);
         Bidding o = new Gson().fromJson(messageContent, Bidding.class);
         return o;
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param messageContent
+     * @return
+     */
+    public static List<CarInfo> getUserCars(String messageContent) {
+        Gson g = new Gson();
+        List<CarInfo> cars = g.fromJson(messageContent, new TypeToken<List<CarInfo>>() {
+        }.getType());
+        return cars;
     }
 
 }
