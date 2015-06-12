@@ -45,13 +45,19 @@
             android:gravity="center"
             android:text="@string/showad" />
     </LinearLayout>
-
     <FrameLayout
         android:id="@+id/topfl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:alpha="1" 
-        android:background="#555555"/>
+        android:background="@drawable/login_button_nor">
+         <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/progress_loading" />
+     </FrameLayout>
 
 </LinearLayout>

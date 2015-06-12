@@ -145,7 +145,6 @@ public class SigninFragment extends BaseFragment {
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
                 }
                 break;
-
             default:
                 break;
         }

@@ -65,6 +65,7 @@ public class MessageConst {
         public static final int MSG_TYPE_BLUETOOTH_TOAST = 15;
         public static final int MSG_TYPE_UI_SHOW_USER_INFO = 16;
         public static final int MSG_TYPE_UI_SHOW_SIGN_IN = 17;
+        public static final int MSG_TYPE_UI_DISMISS_LOADING = 18;
 
 
     }

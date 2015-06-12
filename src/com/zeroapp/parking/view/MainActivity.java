@@ -17,7 +17,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -26,8 +25,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -70,10 +67,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 	private BluetoothChatService mChatService = null;
     private MessageBox mBox;
 	private BaseFragment f = null;
-    private FrameLayout fLayout = null;
     private TextView balance = null;
     private LinearLayout buttonLayout = null;
-	private Button buttonSignin;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,7 +116,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     }
 
 	private void initView() {
-        fLayout = (FrameLayout) findViewById(R.id.topfl_container);
         buttonLayout = (LinearLayout) findViewById(R.id.llayout_button);
         balance = (TextView) findViewById(R.id.balance);
         findViewById(R.id.button_user_info).setOnClickListener(this);
@@ -233,6 +227,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
                 showFragment(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
                 break;
+
             default:
                 break;
         }
@@ -253,8 +248,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 		return false;
 	}
     private void exitApp() {
-        Process.killProcess(Process.myPid());
-
+        System.exit(0);
     }
 
 	@Override
@@ -287,20 +281,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 break;
         }
         t.replace(R.id.topfl_container, f).commit();
-
-		// int h = topLayout.getHeight();
-		// Animation inAnimotion = new TranslateAnimation(0, 0, -h, 0);
-		// inAnimotion.setFillAfter(true);
-		// inAnimotion.setDuration(1000);
-		// topLayout.startAnimation(inAnimotion);
-
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                fLayout.setVisibility(View.GONE);
+//                fLayout.setVisibility(View.GONE);
                 return true;
 
             default:
@@ -313,7 +300,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     public void onConnect() {
         Log.d("");
         showFragment(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-
     }
     @Override
     public void onDisconnect() {
