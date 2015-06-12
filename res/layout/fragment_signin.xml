@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/login_button_nor" >
+    <LinearLayout 
+        android:id="@+id/ll_signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="45dip"
         android:layout_marginRight="60dip"
         android:orientation="vertical" 
-        android:background="@drawable/login_bg" >
+        android:background="@drawable/login_bg" 
+        android:visibility="invisible">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,3 +69,11 @@
                 android:text="登陆" />
         </LinearLayout>
     </LinearLayout>
+     <ProgressBar
+        android:id="@+id/loading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progress_loading" />
+</FrameLayout>

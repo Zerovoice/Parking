@@ -14,14 +14,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="姓名: "
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_normal"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -33,14 +32,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="手机："
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/user_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_normal"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,14 +50,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="身份证号："
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/user_idnum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_normal"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="我的车辆 ："
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <ProgressBar
                 android:id="@+id/loading"
@@ -96,5 +93,12 @@
             android:layout_margin="5dp"
             android:verticalSpacing="2dp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|right"
+        android:text="@string/signout" />
 
 </LinearLayout>

@@ -11,17 +11,13 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.parking.client;
+package com.zeroapp.parking.common;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-import com.zeroapp.parking.common.Bidding;
-import com.zeroapp.parking.common.Business;
-import com.zeroapp.parking.common.CarInfo;
-import com.zeroapp.parking.common.User;
 import com.zeroapp.utils.Log;
 
 

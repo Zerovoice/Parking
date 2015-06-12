@@ -24,7 +24,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ContentToObj;
+import com.zeroapp.parking.common.ContentToObj;
 import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
@@ -88,6 +88,7 @@ public class SignupFragment extends BaseFragment {
 //        });
         mainView.findViewById(R.id.rigister_btn_register).setOnClickListener(new OnClickListener() {
 
+            @Override
             public void onClick(View arg0) {
                 if (accountEt.getText().toString().equals("") || passwordEt.getText().toString().equals("")) {
                     Toast.makeText(mainActivity, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
@@ -103,67 +104,18 @@ public class SignupFragment extends BaseFragment {
                 }
             }
         });
+        mainView.findViewById(R.id.rigister_btn_cancel).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                ClientServerMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
+                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
+            }
+        });
         return mainView;
     }
 
-    // if(accountEt.getText().toString().equals("") ||
-    // passwordEt.getText().toString().equals("")){
-    // Toast.makeText(mainActivity, "账号或密码不能为空！", Toast.LENGTH_SHORT).show();
-    // }else {
-    // dialog = ProgressDialog.show(mainActivity, "YQ", "正在登陆中 …", true, true);
-    // final User user=new User();
-    // user.setAccount(Integer.parseInt(accountEt.getText().toString()));
-    // user.setPassword(passwordEt.getText().toString());
-    // user.setNick(nickEt.getText().toString());
-    // user.setTrends("this should be fixed ");
-    // user.setSex(sex);
-    // user.setAvatar("3");
-    // user.setLev(0);
-    // user.setAge(0);
-    // user.setTime(MyTime.geTimeNoS());
-    // user.setTag(1);
-    // user.setOperation("register");
-    // new Thread( new Runnable() {
-    // private boolean b;
-    // public void run() {
-    // b=new ActionClient(RegisterActivity.this).sendRegisterInfo(user);
-    // ProgressBarControl();
-    // }
-    // private void ProgressBarControl() {
-    // Log.i(TAG, "");
-    // handler.post(new Runnable(){
-    // public void run() {
-    // if(b){
-    // Message m=new Message();
-    // m.what=1;
-    // handler.sendMessage(m);
-    // //转到主界面
-    // Toast.makeText(RegisterActivity.this, "恭喜你，注册成功 ！",
-    // Toast.LENGTH_SHORT).show();
-    // startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
-    // }else {
-    // dialog.dismiss();
-    // Toast.makeText(RegisterActivity.this, "还要恭喜你，注册失败 ！",
-    // Toast.LENGTH_SHORT).show();
-    // }
-    // }
-    // });
-    // }
-    // }).start();
-    // }
-    // }
-    // });
-    // }
-
-//    private Handler handler=new Handler(){  
-//        public void handleMessage(Message msg){  
-//            switch(msg.what){  
-//                case 1:
-//                    dialog.dismiss();  
-//                    break;  
-//            }  
-//        }  
-//    }; 
     /**
      * <p>
      * Title: TODO.
@@ -195,10 +147,14 @@ public class SignupFragment extends BaseFragment {
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-
                     mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
+                    // 记录用户名和密码
+                    mainActivity.prefNoVersion.edit().putString("account", mainActivity.me.getAccount()).commit();
+                    mainActivity.prefNoVersion.edit().putString("password", mainActivity.me.getPassword()).commit();
                     msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
+                } else {
+                    // TODO TOAST FAIL
                 }
                 break;
 

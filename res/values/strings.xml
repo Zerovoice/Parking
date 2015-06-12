@@ -8,6 +8,7 @@
     <!--  BluetoothChat -->
     <string name="send">Send</string>
     <string name="signin">Signin</string>
+    <string name="signout">SignOut</string>
     <string name="userinfo">UserInfo</string>
     <string name="showtotal">Total</string>
     <string name="showad">Ad</string>

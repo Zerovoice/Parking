@@ -17,8 +17,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ContentToObj;
 import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.ContentToObj;
 import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
@@ -57,6 +59,7 @@ public class UserInfoFragment extends BaseFragment {
     private TextView IdNum;
     private ListView listViewCars;
     private ProgressBar loadingBar;
+    private Button btSignout;
 
     @Override
     public void onAttach(Activity activity) {
@@ -76,6 +79,22 @@ public class UserInfoFragment extends BaseFragment {
         phoneNum.setText(mainActivity.me.getPhoneNum());
         IdNum.setText(mainActivity.me.getIdentityNum());
         listViewCars = (ListView) mainView.findViewById(R.id.lv_cars);
+        btSignout = (Button) mainView.findViewById(R.id.btn_signout);
+        btSignout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 删除用户名和密码记录
+                mainActivity.prefNoVersion.edit().putString("account", null).commit();
+                mainActivity.prefNoVersion.edit().putString("password", null).commit();
+                // 删除me的记录
+                mainActivity.initUser();
+                mainActivity.myCars = null;
+                ClientServerMessage m = new ClientServerMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
+                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
+
+            }
+        });
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
         if (mainActivity.myCars == null) {
             requestMyCars();
@@ -127,6 +146,8 @@ public class UserInfoFragment extends BaseFragment {
 //                        Log.d(mainActivity.myCars.get(i).getCarNum());
 //                        Log.d(mainActivity.myCars.get(i).getBiddingID() + "");
 //                    }
+                } else {
+                    // TODO TOSAT FAIL
                 }
                 updateListViewCars();
                 break;

@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         new Thread(man).start();
     }
 
-    private void initUser() {
+    public void initUser() {
         me = new User();
         prefNoVersion = getApplicationContext().getSharedPreferences(PREF_NAME, 0);
         me.setAccount(prefNoVersion.getString("account", null));
@@ -222,6 +222,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                 break;
 
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN:
+                // update balance
+                balance.setText(0 + "");
+                // hide buttons
+                buttonLayout.setVisibility(View.GONE);
+                // 设置ActionBar
+                ActionBar actionBar2 = getActionBar();
+                actionBar2.setTitle(getString(R.string.app_name));
+
+                showFragment(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
+                break;
             default:
                 break;
         }
