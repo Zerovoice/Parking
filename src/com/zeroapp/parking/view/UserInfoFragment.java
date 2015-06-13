@@ -14,11 +14,16 @@
 package com.zeroapp.parking.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -32,6 +37,7 @@ import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.common.ContentToObj;
 import com.zeroapp.parking.common.ObjToContent;
+import com.zeroapp.parking.dialog.BaseDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -50,7 +56,7 @@ import com.zeroapp.utils.Log;
  * @version $Id$
  */
 
-public class UserInfoFragment extends BaseFragment {
+public class UserInfoFragment extends BaseFragment implements OnLongClickListener {
 
     private MainActivity mainActivity;
     private View mainView;
@@ -73,11 +79,17 @@ public class UserInfoFragment extends BaseFragment {
         Log.i("onCreateView");
         mainView = inflater.inflate(R.layout.fragment_user, null);
         name = (TextView) mainView.findViewById(R.id.user_name);
-        phoneNum = (TextView) mainView.findViewById(R.id.user_phone);
-        IdNum = (TextView) mainView.findViewById(R.id.user_idnum);
         name.setText(mainActivity.me.getName());
+        name.setOnLongClickListener(this);
+
+        phoneNum = (TextView) mainView.findViewById(R.id.user_phone);
         phoneNum.setText(mainActivity.me.getPhoneNum());
+        phoneNum.setOnLongClickListener(this);
+
+        IdNum = (TextView) mainView.findViewById(R.id.user_idnum);
         IdNum.setText(mainActivity.me.getIdentityNum());
+        IdNum.setOnLongClickListener(this);
+
         listViewCars = (ListView) mainView.findViewById(R.id.lv_cars);
         btSignout = (Button) mainView.findViewById(R.id.btn_signout);
         btSignout.setOnClickListener(new OnClickListener() {
@@ -105,8 +117,23 @@ public class UserInfoFragment extends BaseFragment {
     }
 
     private void updateListViewCars() {
-        // TODO show on UI
-//        listViewCars.setAdapter(new MyCarsAdeptet(mainActivity.myCars));
+        listViewCars.setAdapter(new MyCarsAdeptet(mainActivity, mainActivity.myCars));
+        listViewCars.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
+                CarInfo car = (CarInfo) adapterView.getAdapter().getItem(i);
+                // TODO new dialog
+                if (car != null) {
+                    Log.i("num: " + car.getCarNum());
+                    new BaseDialog(mainActivity, R.layout.device_list).show();
+                } else {
+                    new BaseDialog(mainActivity, R.layout.device_list).show();
+
+                }
+
+            }
+        });
         // 隐藏缓冲圈
         loadingBar.setVisibility(View.INVISIBLE);
 
@@ -161,24 +188,28 @@ public class UserInfoFragment extends BaseFragment {
     public class MyCarsAdeptet extends BaseAdapter {
 
         private List<CarInfo> cars = null;
+        private Context mContext = null;;
 
-        public MyCarsAdeptet(List<CarInfo> l) {
+        public MyCarsAdeptet(Context ctx, List<CarInfo> l) {
+            this.mContext = ctx;
             if (l == null) {
                 cars = new ArrayList<CarInfo>();
             } else {
                 cars = l;
             }
-            cars.add(new CarInfo());
         }
 
         @Override
         public int getCount() {
-            return cars.size();
+            return cars.size() + 1;
         }
 
         @Override
         public Object getItem(int i) {
-            return cars.get(i);
+            if (i < cars.size()) {
+                return cars.get(i);
+            }
+            return null;
         }
         @Override
         public long getItemId(int i) {
@@ -187,11 +218,60 @@ public class UserInfoFragment extends BaseFragment {
 
         @Override
         public View getView(int i, View v, ViewGroup group) {
-            // TODO Auto-generated method stub
-            return null;
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            v = inflater.inflate(R.layout.lvitem_carinfo, null);
+            if (i < cars.size()) {
+                TextView carNum = (TextView) v.findViewById(R.id.car_num);
+                TextView carState = (TextView) v.findViewById(R.id.car_state);
+                carNum.setText(cars.get(i).getCarNum());
+                carState.setText(cars.get(i).getCarState());
+            } else {
+                TextView t = new TextView(mainActivity);
+                t.setText("add!!");
+                t.setTextSize(60);
+                LayoutParams lp = group.getLayoutParams();
+                lp.height = LayoutParams.WRAP_CONTENT;
+                lp.width = LayoutParams.MATCH_PARENT;
+                t.setLayoutParams(lp);
+                v = t;
+            }
+            return v;
         }
+
     }
 
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param arg0
+     * @return
+     */
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.user_phone:
+                new BaseDialog(mainActivity, R.layout.device_list).show();
+                break;
+            case R.id.user_name:
+                if (mainActivity.me.getName().equals("")) {
+                    new BaseDialog(mainActivity, R.layout.device_list).show();
+                }
+                break;
+            case R.id.user_idnum:
+                if (mainActivity.me.getIdentityNum().equals("")) {
+                    new BaseDialog(mainActivity, R.layout.device_list).show();
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
 
 
 }

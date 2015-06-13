@@ -64,7 +64,7 @@ public class BiddingFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_bidddings, null);
         llBidding = (LinearLayout) mainView.findViewById(R.id.ll_bidding);
         cityName = (TextView) mainView.findViewById(R.id.city_name);
-        cityName.setText(mainActivity.me.getName());
+        cityName.setText("青岛");// TODO
         listViewBiddings = (ListView) mainView.findViewById(R.id.lv_biddings);
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
         requestBiddings();
@@ -73,10 +73,10 @@ public class BiddingFragment extends BaseFragment {
 
     /**
      * <p>
-     * Title: TODO.
+     * Title: requestBiddings.
      * </p>
      * <p>
-     * Description: TODO.
+     * Description: 请求bidding列表.
      * </p>
      * 
      */

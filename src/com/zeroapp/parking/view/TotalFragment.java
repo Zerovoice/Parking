@@ -33,7 +33,7 @@ import com.zeroapp.utils.Log;
 
 /**
  * <p>
- * Title: TODO.
+ * Title: TotalFragment.
  * </p>
  * <p>
  * Description: TODO.
@@ -74,10 +74,10 @@ public class TotalFragment extends BaseFragment {
 
     /**
      * <p>
-     * Title: TODO.
+     * Title: requestTotal.
      * </p>
      * <p>
-     * Description: TODO.
+     * Description: 请求历史Parking记录.
      * </p>
      * 
      */
@@ -93,7 +93,7 @@ public class TotalFragment extends BaseFragment {
         // test code
         Log.i("updateListViewCars");
         TextView t = new TextView(mainActivity);
-        t.setText("get Total!");
+        t.setText("get Total success!");
         LayoutParams lp = llTotal.getLayoutParams();
         lp.height = LayoutParams.WRAP_CONTENT;
         lp.width = LayoutParams.MATCH_PARENT;

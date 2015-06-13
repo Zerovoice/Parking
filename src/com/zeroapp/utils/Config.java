@@ -28,6 +28,6 @@ package com.zeroapp.utils;
 
 public class Config {
 
-    public static final String HOST_ADRESS = "192.168.100.7";
+    public static final String HOST_ADRESS = "192.168.1.106";
 	public static final int HOST_PORT = 8080;
 }

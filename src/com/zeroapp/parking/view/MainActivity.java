@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 	private BaseFragment f = null;
     private TextView balance = null;
     private LinearLayout buttonLayout = null;
+    private long mExitTime = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -242,7 +244,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 //            case R.id.insecure_connect_scan:
 //                return true;
             case R.id.exit:
-                exitApp();
+//                exitApp();
                 return true;
 		}
 		return false;
@@ -284,16 +286,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-//                fLayout.setVisibility(View.GONE);
+                // 连按两次back键退出
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (System.currentTimeMillis() - mExitTime > 1500) {
+                        Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                        mExitTime = System.currentTimeMillis();
+                    } else {
+                        exitApp();
+                    }
+                }
                 return true;
 
             default:
                 break;
         }
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
 	}
 
     @Override
