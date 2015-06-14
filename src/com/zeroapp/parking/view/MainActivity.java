@@ -69,8 +69,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private MessageBox mBox;
 	private BaseFragment f = null;
     private TextView balance = null;
-    private LinearLayout buttonLayout = null;
     private long mExitTime = 0;
+    private LinearLayout userButtonsLayout;
+    private LinearLayout adButtonsLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,11 +119,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     }
 
 	private void initView() {
-        buttonLayout = (LinearLayout) findViewById(R.id.llayout_button);
+        userButtonsLayout = (LinearLayout) findViewById(R.id.llayout_user_buttons);
+        adButtonsLayout = (LinearLayout) findViewById(R.id.llayout_ad_buttons);
         balance = (TextView) findViewById(R.id.balance);
-        findViewById(R.id.button_user_info).setOnClickListener(this);
-        findViewById(R.id.button_show_total).setOnClickListener(this);
-        findViewById(R.id.button_show_biddings).setOnClickListener(this);
+        findViewById(R.id.btn_user_info).setOnClickListener(this);
+        findViewById(R.id.btn_show_user_record).setOnClickListener(this);
+        findViewById(R.id.btn_show_biddings).setOnClickListener(this);
+        findViewById(R.id.btn_adman_info).setOnClickListener(this);
+        findViewById(R.id.btn_show_business).setOnClickListener(this);
+        findViewById(R.id.btn_show_adman_record).setOnClickListener(this);
 	}
 
     private void bindServer() {
@@ -134,6 +139,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     public void initUser() {
         me = new User();
+        myCars = null;
         prefNoVersion = getApplicationContext().getSharedPreferences(PREF_NAME, 0);
         me.setAccount(prefNoVersion.getString("account", null));
         me.setPassword(prefNoVersion.getString("password", null));
@@ -202,30 +208,39 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
      * @param obj
      */
     protected void dealUIMessage(AMessage obj) {
+        ActionBar actionBar = getActionBar();
         switch (obj.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO:
                 // update balance
                 balance.setText(me.getAccountBanlance() + "");
                 // show buttons
-                buttonLayout.setVisibility(View.VISIBLE);
+                userButtonsLayout.setVisibility(View.VISIBLE);
+                adButtonsLayout.setVisibility(View.GONE);
                 // 设置ActionBar
-                ActionBar actionBar = getActionBar();
-                // actionBar.setDisplayShowHomeEnabled(false);
-                // actionBar.setDisplayShowTitleEnabled(false);
                 actionBar.setTitle(me.getName());
-                // actionBar.setSubtitle("zxb");
 
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                break;
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
+                // update balance
+                balance.setText(me.getAccountBanlance() + "");
+                // show buttons
+                userButtonsLayout.setVisibility(View.GONE);
+                adButtonsLayout.setVisibility(View.VISIBLE);
+                // 设置ActionBar
+                actionBar.setTitle(me.getName());
+
+                showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
                 break;
 
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN:
                 // update balance
                 balance.setText(0 + "");
                 // hide buttons
-                buttonLayout.setVisibility(View.GONE);
+                userButtonsLayout.setVisibility(View.GONE);
+                adButtonsLayout.setVisibility(View.GONE);
                 // 设置ActionBar
-                ActionBar actionBar2 = getActionBar();
-                actionBar2.setTitle(getString(R.string.app_name));
+                actionBar.setTitle(getString(R.string.app_name));
 
                 showFragment(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
                 break;
@@ -250,6 +265,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 		return false;
 	}
     private void exitApp() {
+        prefNoVersion.edit().putString("account", me.getAccount()).commit();
+        prefNoVersion.edit().putString("password", me.getPassword()).commit();
         System.exit(0);
     }
 
@@ -266,17 +283,29 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO:
                 f = new UserInfoFragment();
                 break;
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
+                f = new AdertisingManInfoFragment();
+                break;
             case R.id.btn_signup:
                 f = new SignupFragment();
                 break;
-            case R.id.button_show_total:
-                f = new TotalFragment();
+            case R.id.btn_user_info:
+                f = new UserInfoFragment();
                 break;
-            case R.id.button_show_biddings:
+            case R.id.btn_show_biddings:
                 f = new BiddingFragment();
                 break;
-            case R.id.button_user_info:
-                f = new UserInfoFragment();
+            case R.id.btn_show_user_record:
+                f = new UserRecordFragment();
+                break;
+            case R.id.btn_adman_info:
+                f = new AdertisingManInfoFragment();
+                break;
+            case R.id.btn_show_business:
+                f = new BusinessFragment();
+                break;
+            case R.id.btn_show_adman_record:
+                f = new AdmanRecordFragment();
                 break;
 
             default:

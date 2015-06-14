@@ -33,75 +33,74 @@ import com.zeroapp.utils.Log;
 
 /**
  * <p>
- * Title: TotalFragment.
+ * Title: BiddingFragment.
  * </p>
  * <p>
- * Description: TODO.
+ * Description: 用来显示bidding列表.
  * </p>
  * 
  * @author Alex(zeroapp@126.com) 2015-5-28.
  * @version $Id$
  */
-public class TotalFragment extends BaseFragment {
+public class BusinessFragment extends BaseFragment {
 
-    private View mainView;
     private MainActivity mainActivity;
-    private TextView wodeName;
-    private ListView listViewTotal;
+    private View mainView;
+    private TextView cityName;
+    private ListView listViewBiddings;
     private ProgressBar loadingBar;
-    private LinearLayout llTotal;
+    private LinearLayout llBidding;
 
     @Override
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
         mainActivity = (MainActivity) getActivity();
-        // reqData = new HashMap<String, Object>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("onCreateView");
-        mainView = inflater.inflate(R.layout.fragment_total, null);
-        llTotal = (LinearLayout) mainView.findViewById(R.id.ll_total);
-        wodeName = (TextView) mainView.findViewById(R.id.wode_name);
-        wodeName.setText(mainActivity.me.getName());
-        listViewTotal = (ListView) mainView.findViewById(R.id.lv_total);
+        mainView = inflater.inflate(R.layout.fragment_bidddings, null);
+        llBidding = (LinearLayout) mainView.findViewById(R.id.ll_bidding);
+        cityName = (TextView) mainView.findViewById(R.id.city_name);
+        cityName.setText("青岛");// TODO
+        listViewBiddings = (ListView) mainView.findViewById(R.id.lv_biddings);
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
-        requestTotal();
+        requestBiddings();
         return mainView;
     }
 
     /**
      * <p>
-     * Title: requestTotal.
+     * Title: requestBiddings.
      * </p>
      * <p>
-     * Description: 请求历史Parking记录.
+     * Description: 请求bidding列表.
      * </p>
      * 
      */
-    private void requestTotal() {
+    private void requestBiddings() {
         ClientServerMessage m = new ClientServerMessage();
-        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_MONEY);
-        m.setMessageContent("money");// TODO
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_BIDDING);
+        m.setMessageContent("qingdao");// TODO
         mainActivity.getBox().sendMessage(m);
     }
 
-    private void updateListViewTotal() {
+    private void updateListViewCars() {
         // TODO show on UI
         // test code
         Log.i("updateListViewCars");
         TextView t = new TextView(mainActivity);
-        t.setText("get Total success!");
-        LayoutParams lp = llTotal.getLayoutParams();
+        t.setText("get binddings!");
+        LayoutParams lp = llBidding.getLayoutParams();
         lp.height = LayoutParams.WRAP_CONTENT;
         lp.width = LayoutParams.MATCH_PARENT;
         t.setLayoutParams(lp);
-        llTotal.addView(t, 0);
+        llBidding.addView(t, 0);
 
         // 显示主View
-        llTotal.setVisibility(View.VISIBLE);
+        llBidding.setVisibility(View.VISIBLE);
         // 隐藏缓冲圈
         loadingBar.setVisibility(View.INVISIBLE);
 
@@ -111,11 +110,11 @@ public class TotalFragment extends BaseFragment {
     public void refreshUI(AMessage msg) {
         Log.i("");
         switch (msg.getMessageType()) {
-            case MessageConst.MessageType.MSG_TYPE_USER_LIST_MONEY:
+            case MessageConst.MessageType.MSG_TYPE_USER_LIST_BIDDING:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
                 }
-                updateListViewTotal();
+                updateListViewCars();
                 break;
 
             default:

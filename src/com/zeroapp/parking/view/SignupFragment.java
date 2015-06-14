@@ -21,6 +21,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.zeroapp.parking.R;
@@ -49,6 +51,7 @@ public class SignupFragment extends BaseFragment {
     private EditText accountEt;
     private EditText passwordEt;
     private CheckBox agreementCb;
+    private CheckBox adManCb;
 
     @Override
     public void onAttach(Activity activity) {
@@ -75,21 +78,25 @@ public class SignupFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_signup, null);
         accountEt = (EditText) mainView.findViewById(R.id.register_account);
         passwordEt = (EditText) mainView.findViewById(R.id.register_password);
+        adManCb = (CheckBox) mainView.findViewById(R.id.cb_ifadvertisingman);
         agreementCb = (CheckBox) mainView.findViewById(R.id.cb_agreement);
 //        EditText nickEt = (EditText) mainView.findViewById(R.id.register_nick);
-//        RadioGroup group = (RadioGroup) mainView.findViewById(R.id.register_radiogroup);
-//        group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//            public void onCheckedChanged(RadioGroup arg0, int id) {
-//                if (id == R.id.register_radio_nv) {
-//                    mainActivity.me.setSex(0);// 女
-//                }
-//            }
-//        });
+        RadioGroup group = (RadioGroup) mainView.findViewById(R.id.register_radiogroup);
+        group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            public void onCheckedChanged(RadioGroup arg0, int id) {
+                if (id == R.id.register_radio_nv) {
+                    mainActivity.me.setSex(0);// 女
+                }
+            }
+        });
         mainView.findViewById(R.id.rigister_btn_register).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
+                if (adManCb.isChecked()) {
+                    mainActivity.me.setUserType("1_0");
+                }
                 if (accountEt.getText().toString().equals("") || passwordEt.getText().toString().equals("")) {
                     Toast.makeText(mainActivity, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
                 } else if (!agreementCb.isChecked()) {
@@ -101,6 +108,10 @@ public class SignupFragment extends BaseFragment {
                     m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
                     m.setMessageContent(ObjToContent.getContent(mainActivity.me));
                     mainActivity.getBox().sendMessage(m);
+
+                    // 跳转fragment TODO
+//                    msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+//                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
                 }
             }
         });
@@ -148,9 +159,6 @@ public class SignupFragment extends BaseFragment {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
-                    // 记录用户名和密码
-                    mainActivity.prefNoVersion.edit().putString("account", mainActivity.me.getAccount()).commit();
-                    mainActivity.prefNoVersion.edit().putString("password", mainActivity.me.getPassword()).commit();
                     msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
                 } else {

@@ -8,10 +8,23 @@
     <!--  BluetoothChat -->
     <string name="send">Send</string>
     <string name="signin">Signin</string>
+    <string name="signup">Signup</string>
     <string name="signout">SignOut</string>
-    <string name="userinfo">UserInfo</string>
-    <string name="showtotal">Total</string>
-    <string name="showad">Ad</string>
+    <string name="account">Account:</string>
+    <string name="pssword">Password:</string>
+    <string name="register_account_hint">6&#8211;10 words</string>
+    <string name="sex">Sex:</string>
+    <string name="male">Male</string>
+    <string name="famale">Famale</string>
+    <string name="tobe_advertising_man">Sign up as an advertising man</string>
+    <string name="agreement">Agreed to user agreement</string>
+    <string name="cancel">Cancel</string>
+    <string name="user_info">UserInfo</string>
+    <string name="adman_info">AdmanInfo</string>
+    <string name="adman_record">Record</string>
+    <string name="user_record">Record</string>
+    <string name="show_biddings">Biddings</string>
+    <string name="show_business">Business</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
     <string name="title_connecting">connecting...</string>

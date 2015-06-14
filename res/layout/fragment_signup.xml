@@ -13,7 +13,7 @@
             	android:layout_height="wrap_content"
             	android:textSize="24sp"
             	android:textColor="#4F4F4F"
-            	android:text="注册 "/>
+            	android:text="@string/signup"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,14 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="账号：" />
+                android:text="@string/account" />
             <EditText
                 android:id="@+id/register_account"
                 android:layout_width="200dip"
                 android:layout_height="wrap_content"
 	            android:maxLength="10"
 	            android:textSize="16sp"
-	            android:hint="6到10个字符"
+	            android:hint="@string/register_account_hint"
                 android:background="@drawable/input_normal" />
         </LinearLayout>
         <LinearLayout
@@ -48,13 +48,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="密码：" />
+                android:text="@string/pssword" />
             <EditText
                 android:id="@+id/register_password"
                 android:layout_width="200dip"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:hint="6到10个字符"
+                android:hint="@string/register_account_hint"
                 android:background="@drawable/input_normal" />
         </LinearLayout>
         <!-- <LinearLayout
@@ -74,8 +74,8 @@
                 android:hint="不能为空"
                 android:background="@drawable/input_normal" />
         </LinearLayout>
-         -->
-         <!-- <LinearLayout
+        -->
+         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="性别：" />
+                android:text="@string/sex" />
             <RadioGroup 
                 android:id="@+id/register_radiogroup"
                 android:layout_width="wrap_content"
@@ -92,15 +92,27 @@
                     android:id="@+id/register_radio_nan"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:text="男"/>
+	                android:text="@string/male"/>
 	            <RadioButton 
 	                android:id="@+id/register_radio_nv"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:text="女"/>
+	                android:text="@string/famale"/>
             </RadioGroup>
         </LinearLayout>
-         -->
+                <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <CheckBox
+                android:id="@+id/cb_ifadvertisingman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/cb_check"
+                android:textColor="#4F4F4F"
+                android:textSize="16sp"
+                android:text="@string/tobe_advertising_man" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,7 +124,7 @@
                 android:button="@drawable/cb_check"
                 android:textColor="#4F4F4F"
                 android:textSize="16sp"
-                android:text="同意《用户协议》" />
+                android:text="@string/agreement" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -123,16 +135,16 @@
                 android:id="@+id/rigister_btn_cancel"
                 android:layout_width="110dp"
                 android:layout_height="35dp"
-                android:background="@drawable/login_button_nor"
+                android:background="@drawable/login_btn_selector"
                 android:gravity="center"
-                android:text="取消" />
+                android:text="@string/cancel" />
             <Button
                 android:id="@+id/rigister_btn_register"
                 android:layout_width="110dp"
                 android:layout_height="35dp"
-                android:background="@drawable/login_button_nor"
+                android:background="@drawable/login_btn_selector"
                 android:gravity="center"
-                android:text="注册" />
+                android:text="@string/signup" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

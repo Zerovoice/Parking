@@ -45,18 +45,14 @@ import com.zeroapp.utils.Log;
 
 
 /**
- * <p>
- * Title: UserInfoFragment.
- * </p>
- * <p>
- * Description: 显示用户详情和汽车信息.
- * </p>
- * 
- * @author Alex(zeroapp@126.com) 2015-6-10.
+ * <p>Title: TODO.</p>
+ * <p>Description: TODO.</p>
+ *
+ * @author Alex(zeroapp@126.com) 2015-6-14.
  * @version $Id$
  */
 
-public class UserInfoFragment extends BaseFragment implements OnLongClickListener {
+public class AdertisingManInfoFragment extends BaseFragment implements OnLongClickListener {
 
     private MainActivity mainActivity;
     private View mainView;
@@ -77,7 +73,7 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("onCreateView");
-        mainView = inflater.inflate(R.layout.fragment_user_info, null);
+        mainView = inflater.inflate(R.layout.fragment_adman_info, null);
         name = (TextView) mainView.findViewById(R.id.user_name);
         name.setText(mainActivity.me.getName());
         name.setOnLongClickListener(this);
@@ -100,7 +96,6 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
                 mainActivity.prefNoVersion.edit().putString("password", null).commit();
                 // 删除me的记录
                 mainActivity.initUser();
-//                mainActivity.myCars = null;
                 ClientServerMessage m = new ClientServerMessage();
                 m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
                 mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();

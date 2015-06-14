@@ -137,12 +137,22 @@ public class SigninFragment extends BaseFragment {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
-                    // 记录用户名和密码
-                    mainActivity.prefNoVersion.edit().putString("account", mainActivity.me.getAccount()).commit();
-                    mainActivity.prefNoVersion.edit().putString("password", mainActivity.me.getPassword()).commit();
-
-                    msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                    if (mainActivity.me.getUserType().startsWith("0")) {
+                        msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                    } else if (mainActivity.me.getUserType().startsWith("1")) {
+                        msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
+                    }
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
+
+                } else {
+                    // TODO TOAST FAIL
+
+                    // 重新登录
+                    // 删除me的记录
+                    mainActivity.initUser();
+                    ClientServerMessage m = new ClientServerMessage();
+                    m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
+                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
                 }
                 break;
             default:
