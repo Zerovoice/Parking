@@ -72,6 +72,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private long mExitTime = 0;
     private LinearLayout userButtonsLayout;
     private LinearLayout adButtonsLayout;
+    private int lastClick = 0;// 记录上次点击的viewid,用于防止重复点击的逻辑
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -140,6 +142,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     public void initUser() {
         me = new User();
         myCars = null;
+        lastClick = 0;
         prefNoVersion = getApplicationContext().getSharedPreferences(PREF_NAME, 0);
         me.setAccount(prefNoVersion.getString("account", null));
         me.setPassword(prefNoVersion.getString("password", null));
@@ -272,24 +275,35 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
 	@Override
 	public void onClick(View v) {
+        if (lastClick != v.getId()) {
+            // 恢复之前click的view 的点击状态
+            if (lastClick != 0) {
+                findViewById(lastClick).setAlpha(1);
+                findViewById(lastClick).setClickable(true);
+            }
+            // 设置新click的view 的状态
+            v.setClickable(false);
+            v.setAlpha(0.5f);
+            lastClick = v.getId();
+        }
 		showFragment(v.getId());
 	}
 	public void showFragment(int id) {
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         switch (id) {
+            case R.id.btn_signup:
+                f = new SignupFragment();
+                break;
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
                 f = new SigninFragment();
                 break;
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO:
-                f = new UserInfoFragment();
-                break;
-            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
-                f = new AdertisingManInfoFragment();
-                break;
-            case R.id.btn_signup:
-                f = new SignupFragment();
-                break;
             case R.id.btn_user_info:
+                if (lastClick == 0) {
+                    lastClick = R.id.btn_user_info;
+                    findViewById(lastClick).setAlpha(0.5f);
+                    findViewById(lastClick).setClickable(false);
+                }
                 f = new UserInfoFragment();
                 break;
             case R.id.btn_show_biddings:
@@ -298,7 +312,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             case R.id.btn_show_user_record:
                 f = new UserRecordFragment();
                 break;
+            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
             case R.id.btn_adman_info:
+                if (lastClick == 0) {
+                    lastClick = R.id.btn_adman_info;
+                    findViewById(lastClick).setAlpha(0.5f);
+                    findViewById(lastClick).setClickable(false);
+                }
                 f = new AdertisingManInfoFragment();
                 break;
             case R.id.btn_show_business:

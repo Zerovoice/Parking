@@ -38,6 +38,7 @@ import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.common.ContentToObj;
 import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.dialog.BaseDialog;
+import com.zeroapp.parking.dialog.UpdateInfoDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -100,7 +101,6 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
                 mainActivity.prefNoVersion.edit().putString("password", null).commit();
                 // 删除me的记录
                 mainActivity.initUser();
-//                mainActivity.myCars = null;
                 ClientServerMessage m = new ClientServerMessage();
                 m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
                 mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
@@ -255,7 +255,7 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.user_phone:
-                new BaseDialog(mainActivity, R.layout.device_list).show();
+                new UpdateInfoDialog(mainActivity, R.layout.device_list, v).show();
                 break;
             case R.id.user_name:
                 if (mainActivity.me.getName().equals("")) {
