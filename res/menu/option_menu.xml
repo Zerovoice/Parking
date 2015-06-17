@@ -23,7 +23,7 @@
           android:icon="@android:drawable/ic_menu_search"
           android:title="@string/insecure_connect"
           android:showAsAction="ifRoom|withText" /> -->
-    <item android:id="@+id/exit"
+    <item android:id="@+id/locate"
           android:icon="@android:drawable/ic_menu_mylocation"
           android:title="@string/locate"
           android:showAsAction="ifRoom|withText" />

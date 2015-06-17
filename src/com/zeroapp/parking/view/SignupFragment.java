@@ -159,7 +159,11 @@ public class SignupFragment extends BaseFragment {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
-                    msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                    if (mainActivity.me.getUserType().startsWith("0")) {
+                        msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
+                    } else if (mainActivity.me.getUserType().startsWith("1")) {
+                        msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
+                    }
                     mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
                 } else {
                     // TODO TOAST FAIL
