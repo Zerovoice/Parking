@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
+        android:name="com.zeroapp.parking.client.LocationApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -41,10 +42,16 @@
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.zeroapp.parking.locator.LocateService">
+            <intent-filter>
+                <action android:name="com.zeroapp.parking.locator.LocateService" />
+            </intent-filter>
+        </service>
         <activity 
             android:name="com.zeroapp.parking.view.SplashActivity"
             android:screenOrientation="portrait" 
-            
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

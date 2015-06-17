@@ -52,7 +52,7 @@ public class Locator {
     private Context mContext;
     private LocationClient mLocClient;
     private BDLocation mRequestLocation;
-    private Tracer mTracer = null;
+    private PositionTracer mTracer = null;
 
     private Locator(Context context) {
         super();
@@ -60,7 +60,7 @@ public class Locator {
         // 初始化BaiduLocator
         registLocation();
         // 初始化追踪线程;
-        mTracer = new Tracer(context);
+        mTracer = new PositionTracer(context);
         new Thread(mTracer).start();
     }
 
