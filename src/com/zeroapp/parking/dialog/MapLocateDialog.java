@@ -62,8 +62,8 @@ public class MapLocateDialog extends BaseDialog {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         mainView = inflater.inflate(R.layout.activity_locate, null);
         mMapView = (MapView) mainView.findViewById(R.id.bmapView);
-        t1 = (TextView) mainView.findViewById(R.id.text1);
-        btnStartParking = (Button) mainView.findViewById(R.id.start_parking);
+//        t1 = (TextView) mainView.findViewById(R.id.text1);
+//        btnStartParking = (Button) mainView.findViewById(R.id.start_parking);
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);

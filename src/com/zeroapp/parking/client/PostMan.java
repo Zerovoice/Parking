@@ -62,7 +62,7 @@ public class PostMan implements Runnable {
             ChannelFuture future = bootstrap.connect(Config.HOST_ADRESS, Config.HOST_PORT).sync();
             mConnectStateChangeListener.onConnect();
             future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             mConnectStateChangeListener.onDisconnect();
         } finally {

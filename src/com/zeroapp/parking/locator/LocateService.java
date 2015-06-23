@@ -27,7 +27,9 @@ import com.baidu.mapapi.SDKInitializer;
 import java.util.ArrayList;
 
 import com.zeroapp.parking.common.ParkingInfo;
+import com.zeroapp.utils.GraphTool;
 import com.zeroapp.utils.Log;
+import com.zeroapp.utils.MyTime;
 
 /**
  * <p>Title: TODO.</p>
@@ -46,7 +48,15 @@ public class LocateService extends Service {
     /**
      * 定位时间间隔,单位ms
      */
-    private static final int SCAN_SPAN = 5000;
+    private static final int SCAN_SPAN = 1000;
+    /**
+     * 定位时间和停车记录起始时间之间的间隔,单位ms
+     */
+    private static final long TRACE_INTERVAL = 0;
+    /**
+     * 当前位置和停车位置的距离,单位m
+     */
+    public static final double TRACE_DISTANCE = 100000000;
     /**
      * 是否打开GPS
      */
@@ -74,8 +84,8 @@ public class LocateService extends Service {
         Log.i("");
         registLocation();
         // 初始化追踪线程;
-        mTracer = new PositionTracer(this);
-        new Thread(mTracer).start();
+//        mTracer = new PositionTracer(this);
+//        new Thread(mTracer).start();
     }
 
     @Override
@@ -133,13 +143,22 @@ public class LocateService extends Service {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            Log.i("Time: " + location.getTime() + "........Lat: " + location.getLatitude() + "........Lon: " + location.getLongitude());
+            if (location == null) {
+                return;
+            }
+//            Log.d("Time: " + location.getTime() + "........Lat: " + location.getLatitude() + "........Lon: " + location.getLongitude());
+//            Log.d("BD Time:" + MyTime.getLongTime(location.getTime()));
+//            Log.d("CR Time:" + System.currentTimeMillis());
             for (Tracer t : mTracerManager) {
                 t.onLocationChanged(location);
                 for (ParkingInfo p : mParkingManager) {
-                    // TODO 时间判断不应该简单的是不等于,而应该是超过一定时长
-                    if (!p.getTimeStart().equals(location.getTime())) {
-                        t.onComingBack();
+                    Log.d(location.getTime() + "   " + MyTime.getLongTime(location.getTime()) + "    " + p.getTimeStart());
+                    // 定位时间点和停车起始几时点超过规定的时间间隔时,计算距离
+                    if (MyTime.getLongTime(location.getTime()) - p.getTimeStart() > TRACE_INTERVAL) {
+                        Log.d(location.getLatitude() + "    " + location.getLongitude() + "\n" + p.getLocationLatitude() + "    " + p.getLocationLongitude());
+                        // 当定位点和停车起始点距离小于一定值时,通知回来
+                        if (GraphTool.getDistance(location.getLatitude(), location.getLongitude(), p.getLocationLatitude(), p.getLocationLongitude()) < TRACE_DISTANCE)
+                            t.onComingBack(location);
                     }
                 }
             }

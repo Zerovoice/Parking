@@ -27,6 +27,6 @@ public interface Tracer {
 
     public void onLocationChanged(BDLocation location);
 
-    public void onComingBack();
+    public void onComingBack(BDLocation location);
 
 }

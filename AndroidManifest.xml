@@ -65,6 +65,13 @@
             android:label="@string/app_name" >
             
         </activity>
+        <activity
+            android:name="com.zeroapp.parking.view.LocationActivity"
+            android:screenOrientation="portrait" 
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name" >
+            
+        </activity>
         <activity 
             android:name="com.zeroapp.parking.bluetooth.DeviceListActivity"
             android:label="@string/select_device"

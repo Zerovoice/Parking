@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     public static final String PREF_NAME = "Parking";
     public SharedPreferences prefNoVersion = null;
     public User me = null;
-    public List<CarInfo> myCars = null;
+    public static List<CarInfo> myCars = null;
 
 	// Member object for the chat services
 	private BluetoothChatService mChatService = null;
@@ -226,7 +226,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 adButtonsLayout.setVisibility(View.GONE);
                 // 设置ActionBar
                 actionBar.setTitle(me.getName());
-
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                 break;
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:

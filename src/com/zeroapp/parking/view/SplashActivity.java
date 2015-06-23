@@ -27,6 +27,7 @@ public class SplashActivity extends Activity{
             e.printStackTrace();
         }
         new Handler().postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 Intent i = new Intent(SplashActivity.this, MainActivity.class);

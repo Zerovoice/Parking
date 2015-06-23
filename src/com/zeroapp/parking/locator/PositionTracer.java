@@ -14,7 +14,6 @@
 package com.zeroapp.parking.locator;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.baidu.location.BDLocation;
 
@@ -116,65 +115,6 @@ public class PositionTracer implements Runnable {
         return s;
     }
 
-    public double getDistance2(double lat_a, double lng_a, double lat_b, double lng_b) {
-        float[] results = new float[1];
-        Location.distanceBetween(lat_a, lng_a, lat_b, lng_b, results);
-        return results[0];
-    }
 
-    public double getDistance3(double lat_a, double lng_a, double lat_b, double lng_b) {
-        double theta = lng_a - lng_b;
-        double dist = Math.sin(deg2rad(lat_a)) * Math.sin(deg2rad(lat_b)) + Math.cos(deg2rad(lat_a)) * Math.cos(deg2rad(lat_b)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        double miles = dist * 60 * 1.1515;
-        double kilomiters = miles * 1.609344;
-        return kilomiters;
-    }
-
-    // 将角度转换为弧度
-    static double deg2rad(double degree) {
-        return degree / 180 * Math.PI;
-    }
-
-    // 将弧度转换为角度
-    static double rad2deg(double radian) {
-        return radian * 180 / Math.PI;
-    }
-
-//    public double getDistance4(double lat_a, double lng_a, double lat_b, double lng_b) {
-//        double d1 = 3.141592653589793D * (paramDouble2 - paramDouble1) / 180.0D;  
-//        double d2 = 3.141592653589793D * (paramDouble4 - paramDouble3) / 180.0D;  
-//        double d3 = Math.sin(d1 / 2.0D) * Math.sin(d1 / 2.0D) + Math.cos(3.141592653589793D * paramDouble1 / 180.0D) * Math.cos(3.141592653589793D * paramDouble2 / 180.0D) * Math.sin(d2 / 2.0D) * Math.sin(d2 / 2.0D);  
-//        return 6371.0D * (2.0D * Math.atan2(Math.sqrt(d3), Math.sqrt(1.0D - d3)));  
-//    }
-
-    /**
-     * <p>
-     * Title: 获取方位角.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param lat_a
-     * @param lng_a
-     * @param lat_b
-     * @param lng_b
-     * @return
-     */
-    public double getAzimuth(double lat_a, double lng_a, double lat_b, double lng_b) {
-        double d = 0;
-        lat_a = lat_a * Math.PI / 180;
-        lng_a = lng_a * Math.PI / 180;
-        lat_b = lat_b * Math.PI / 180;
-        lng_b = lng_b * Math.PI / 180;
-        d = Math.sin(lat_a) * Math.sin(lat_b) + Math.cos(lat_a) * Math.cos(lat_b) * Math.cos(lng_b - lng_a);
-        d = Math.sqrt(1 - d * d);
-        d = Math.cos(lat_b) * Math.sin(lng_b - lng_a) / d;
-        d = Math.asin(d) * 180 / Math.PI;
-        // d = Math.round(d*10000);
-        return d;
-    }
 
 }
