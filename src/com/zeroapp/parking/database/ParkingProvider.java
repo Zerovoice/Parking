@@ -15,129 +15,82 @@ package com.zeroapp.parking.database;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
+import com.zeroapp.utils.Log;
 
 
 /**
- * <p>Title: TODO.</p>
- * <p>Description: TODO.</p>
- *
+ * <p>
+ * Title: ParkingProvider.
+ * </p>
+ * <p>
+ * Description: DB provider used for PakringInfos.
+ * </p>
+ * 
  * @author Alex(zeroapp@126.com) 2015-6-1.
  * @version $Id$
  */
 
 public class ParkingProvider extends ContentProvider {
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param arg0
-     * @param arg1
-     * @param arg2
-     * @return
-     */
-    @Override
-    public int delete(Uri arg0, String arg1, String[] arg2) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    private DBHelper helper;
+    private SQLiteDatabase db;
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param arg0
-     * @return
-     */
+    private static final UriMatcher sMatcher = DBUtils.initUriMatcher();
+
+    @Override
+    public synchronized int delete(Uri uri, String selection, String[] selectionArgs) {
+        int type = sMatcher.match(uri);
+        Log.i("-> delete()，type is " + type);
+        return db.delete(DBUtils.getCategoryManager().get(type), selection, selectionArgs);
+    }
     @Override
     public String getType(Uri arg0) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param arg0
-     * @param arg1
-     * @return
-     */
     @Override
-    public Uri insert(Uri arg0, ContentValues arg1) {
-        // TODO Auto-generated method stub
+    public synchronized Uri insert(Uri uri, ContentValues values) {
+        int type = sMatcher.match(uri);
+        Log.i("-> insert(),type is " + type);
+        db.insert(DBUtils.getCategoryManager().get(type), null, values);
         return null;
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @return
-     */
     @Override
     public boolean onCreate() {
-        // TODO Auto-generated method stub
+        Log.i("");
+        try {
+            helper = new DBHelper(this.getContext());
+            db = helper.getWritableDatabase();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
         return false;
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param arg0
-     * @param arg1
-     * @param arg2
-     * @param arg3
-     * @param arg4
-     * @return
-     */
     @Override
-    public Cursor query(Uri arg0, String[] arg1, String arg2, String[] arg3, String arg4) {
-        // TODO Auto-generated method stub
-        return null;
+    public synchronized Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        int type = sMatcher.match(uri);
+        Log.i("-> query()，type is " + type);
+        Cursor c = null;
+        c = db.query(DBUtils.getCategoryManager().get(type), projection, selection, selectionArgs, null, null, sortOrder);
+        return c;
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     * @param arg0
-     * @param arg1
-     * @param arg2
-     * @param arg3
-     * @return
-     */
     @Override
-    public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-        // TODO Auto-generated method stub
-        return 0;
+    public synchronized int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        int type = sMatcher.match(uri);
+        Log.i(" -> update()，type is " + type);
+        return db.update(DBUtils.getCategoryManager().get(type), values, selection, selectionArgs);
     }
 
 }

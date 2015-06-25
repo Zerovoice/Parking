@@ -48,6 +48,10 @@
                 <action android:name="com.zeroapp.parking.locator.LocateService" />
             </intent-filter>
         </service>
+        <provider
+            android:name="com.zeroapp.parking.database.ParkingProvider"
+            android:authorities="com.zeroapp.parking.database" 
+            android:exported="true"/>
         <activity 
             android:name="com.zeroapp.parking.view.SplashActivity"
             android:screenOrientation="portrait" 

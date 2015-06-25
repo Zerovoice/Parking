@@ -32,4 +32,5 @@ public class Config {
     public static final int HOST_PORT = 8080;
 //    public static final String HOST_ADRESS = "rwathena.eicp.net";
 //    public static final int HOST_PORT = 20058;
+    public static final boolean USE_DB = true;
 }
