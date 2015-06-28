@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
 	// Member object for the chat services
 	private BluetoothChatService mChatService = null;
-    private MessageBox mBox;
+    private static MessageBox mBox;
 	private BaseFragment f = null;
     private TextView balance = null;
     private long mExitTime = 0;
@@ -122,7 +122,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         }
         Log.e("--- ON DESTROY ---");
     }
-    public MessageBox getBox() {
+
+    public static MessageBox getBox() {
         return mBox;
     }
     public void setBox(MessageBox box) {
@@ -226,6 +227,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 adButtonsLayout.setVisibility(View.GONE);
                 // 设置ActionBar
                 actionBar.setTitle(me.getName());
+                // remember me
+                prefNoVersion.edit().putString("account", me.getAccount()).commit();
+                prefNoVersion.edit().putString("password", me.getPassword()).commit();
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                 break;
             case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
@@ -236,7 +240,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 adButtonsLayout.setVisibility(View.VISIBLE);
                 // 设置ActionBar
                 actionBar.setTitle(me.getName());
-
+                // remember me
+                prefNoVersion.edit().putString("account", me.getAccount()).commit();
+                prefNoVersion.edit().putString("password", me.getPassword()).commit();
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
                 break;
 
@@ -281,8 +287,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 		return false;
 	}
     private void exitApp() {
-        prefNoVersion.edit().putString("account", me.getAccount()).commit();
-        prefNoVersion.edit().putString("password", me.getPassword()).commit();
         System.exit(0);
     }
 

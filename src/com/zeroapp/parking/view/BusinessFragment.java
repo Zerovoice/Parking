@@ -17,14 +17,22 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.List;
+
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.common.Bidding;
+import com.zeroapp.parking.common.Business;
+import com.zeroapp.parking.common.ContentToObj;
+import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -50,6 +58,7 @@ public class BusinessFragment extends BaseFragment {
     private ListView listViewBiddings;
     private ProgressBar loadingBar;
     private LinearLayout llBidding;
+    private List<Business> bs;
 
     @Override
     public void onAttach(Activity activity) {
@@ -61,38 +70,68 @@ public class BusinessFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("onCreateView");
-        mainView = inflater.inflate(R.layout.fragment_bidddings, null);
+        mainView = inflater.inflate(R.layout.fragment_business, null);
         llBidding = (LinearLayout) mainView.findViewById(R.id.ll_bidding);
         cityName = (TextView) mainView.findViewById(R.id.city_name);
         cityName.setText("青岛");// TODO
         listViewBiddings = (ListView) mainView.findViewById(R.id.lv_biddings);
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
-        requestBiddings();
+        Button btnTestBidding = (Button) mainView.findViewById(R.id.btn_test_bidding);
+        btnTestBidding.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                testBid();
+
+            }
+
+        });
+        requestbusinessList();
         return mainView;
     }
 
     /**
      * <p>
-     * Title: requestBiddings.
+     * Title: TODO.
      * </p>
      * <p>
-     * Description: 请求bidding列表.
+     * Description: TODO.
      * </p>
      * 
      */
-    private void requestBiddings() {
+    protected void testBid() {
+        Bidding b = new Bidding();
+        b.setBusinessID(bs.get(0).getBusinessID());
+        b.setUserID(mainActivity.me.getUserID());
         ClientServerMessage m = new ClientServerMessage();
-        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_BIDDING);
-        m.setMessageContent("qingdao");// TODO
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_COMPANY_CREAT_BIDDING);
+        m.setMessageContent(ObjToContent.getContent(b));
         mainActivity.getBox().sendMessage(m);
+
     }
 
-    private void updateListViewCars() {
+    /**
+     * <p>
+     * Title: requestbusinessList.
+     * </p>
+     * <p>
+     * Description: 请求business列表.
+     * </p>
+     * 
+     */
+    private void requestbusinessList() {
+        ClientServerMessage m = new ClientServerMessage();
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_COMPANY_LIST_BUSINESS);
+        m.setMessageContent("qingdao");// TODO
+        mainActivity.getBox().sendMessage(m);
+
+    }
+
+    private void updateListViewBusinesses() {
         // TODO show on UI
         // test code
-        Log.i("updateListViewCars");
         TextView t = new TextView(mainActivity);
-        t.setText("get binddings!");
+        t.setText("updateListViewBusinesses!");
         LayoutParams lp = llBidding.getLayoutParams();
         lp.height = LayoutParams.WRAP_CONTENT;
         lp.width = LayoutParams.MATCH_PARENT;
@@ -110,11 +149,16 @@ public class BusinessFragment extends BaseFragment {
     public void refreshUI(AMessage msg) {
         Log.i("");
         switch (msg.getMessageType()) {
-            case MessageConst.MessageType.MSG_TYPE_USER_LIST_BIDDING:
+            case MessageConst.MessageType.MSG_TYPE_COMPANY_LIST_BUSINESS:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
+                    Log.d("getMessageContent: " + msg.getMessageContent());
+                    bs = ContentToObj.getBusinessList(msg.getMessageContent());
+                    Log.d("getEarnings: " + bs.get(0).getEarnings());
+                } else if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
+                    Log.i("fail");
                 }
-                updateListViewCars();
+                updateListViewBusinesses();
                 break;
 
             default:

@@ -52,6 +52,7 @@ public class SignupFragment extends BaseFragment {
     private EditText passwordEt;
     private CheckBox agreementCb;
     private CheckBox adManCb;
+    private EditText phoneNumEt;
 
     @Override
     public void onAttach(Activity activity) {
@@ -78,6 +79,7 @@ public class SignupFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_signup, null);
         accountEt = (EditText) mainView.findViewById(R.id.register_account);
         passwordEt = (EditText) mainView.findViewById(R.id.register_password);
+        phoneNumEt = (EditText) mainView.findViewById(R.id.register_phone);
         adManCb = (CheckBox) mainView.findViewById(R.id.cb_ifadvertisingman);
         agreementCb = (CheckBox) mainView.findViewById(R.id.cb_agreement);
 //        EditText nickEt = (EditText) mainView.findViewById(R.id.register_nick);
@@ -101,9 +103,12 @@ public class SignupFragment extends BaseFragment {
                     Toast.makeText(mainActivity, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
                 } else if (!agreementCb.isChecked()) {
                     Toast.makeText(mainActivity, "请阅读并同意<用户协议>", Toast.LENGTH_SHORT).show();
+                } else if (phoneNumEt.getText().toString().equals("")) {//TODO 检查手机号码是否违规
+                    Toast.makeText(mainActivity, "手机号码不能为空", Toast.LENGTH_SHORT).show();
                 } else {
                     mainActivity.me.setAccount(accountEt.getText().toString());
                     mainActivity.me.setPassword(passwordEt.getText().toString());
+                    mainActivity.me.setPhoneNum(phoneNumEt.getText().toString());
                     ClientServerMessage m = new ClientServerMessage();
                     m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
                     m.setMessageContent(ObjToContent.getContent(mainActivity.me));

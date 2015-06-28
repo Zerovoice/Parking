@@ -12,6 +12,7 @@
     <string name="signout">SignOut</string>
     <string name="account">Account:</string>
     <string name="pssword">Password:</string>
+    <string name="phone_number">PhoneNumber:</string>
     <string name="register_account_hint">6&#8211;10 words</string>
     <string name="sex">Sex:</string>
     <string name="male">Male</string>

@@ -14,10 +14,14 @@
 package com.zeroapp.parking.common;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+import com.zeroapp.utils.BmapPoint;
 import com.zeroapp.utils.Log;
 
 
@@ -52,11 +56,11 @@ public class ContentToObj {
         return u;
     }
 
-    public static Business getBusiness(String messageContent) {
-        Log.i("messageContent: " + messageContent);
-        Business b = new Gson().fromJson(messageContent, Business.class);
-        return b;
-    }
+//    public static Business getBusiness(String messageContent) {
+//        Log.i("messageContent: " + messageContent);
+//        Business b = new Gson().fromJson(messageContent, Business.class);
+//        return b;
+//    }
 
     public static CarInfo getCarInfo(String messageContent) {
         Log.i("messageContent: " + messageContent);
@@ -86,6 +90,61 @@ public class ContentToObj {
         List<CarInfo> cars = g.fromJson(messageContent, new TypeToken<List<CarInfo>>() {
         }.getType());
         return cars;
+    }
+
+    public static List<Business> getBusinessList(String messageContent) {
+        Gson g = new Gson();
+        List<Business> bs = g.fromJson(messageContent, new TypeToken<List<Business>>() {
+        }.getType());
+        return bs;
+    }
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param bmString
+     * @return
+     */
+    public static BmapPoint[] getCoordinatesOfArea(String jString) {
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonArray jArray = parser.parse(jString).getAsJsonArray();
+        if (jArray.size() == 0) {
+            return null;
+        }
+        BmapPoint[] bmapPoints = new BmapPoint[jArray.size()];
+        Log.d("jArray: " + jArray);
+        for (JsonElement obj : jArray) {
+            int i = 0;
+
+            BmapPoint bp = gson.fromJson(obj, BmapPoint.class);
+            bmapPoints[i] = bp;
+            Log.d("bmapPoints: " + bmapPoints[i].getLng());
+            i++;
+        }
+        return bmapPoints;
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param messageContent
+     * @return
+     */
+    public static List<Bidding> getBiddingsList(String messageContent) {
+        Gson g = new Gson();
+        List<Bidding> bs = g.fromJson(messageContent, new TypeToken<List<Bidding>>() {
+        }.getType());
+        return bs;
     }
 
 }

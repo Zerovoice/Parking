@@ -23,7 +23,9 @@ package com.zeroapp.parking.common;
  */
 
 public class CarInfo {
-
+	public static String CAR_STATE_DEFAULT_VALUE = "sleep";
+	public static String CAR_STATE_ACTIVE_VALUE = "active";
+	public static String CAR_STATE_BLACK_LIST = "bitch";
     /**
      * 车牌号
      */
@@ -38,7 +40,7 @@ public class CarInfo {
      * _之前标示该车是否可以抢广告;
      * _之后标示该车是否可以收入Money;
      */
-    private String carState = "";
+    private String carState = CAR_STATE_DEFAULT_VALUE;
 
     /**
      * <p>
@@ -50,6 +52,28 @@ public class CarInfo {
      * 
      * @return the carNum.
      */
+    private String parkingAreaString;
+    private String carTypeString;
+    private int carValue;
+    
+    public String getParkingArea(){
+    	return parkingAreaString;
+    }
+    public void setParkingArea(String parkingA){
+    	this.parkingAreaString = parkingA;
+    }
+    public String getCarType(){
+    	return carTypeString;
+    }
+    public void setCarType(String carT){
+    	this.carTypeString = carT;
+    }
+    public int getCarValue(){
+    	return carValue;
+    }
+    public void setCarValue(int carValue){
+    	this.carValue = carValue;
+    }
     public String getCarNum() {
         return carNum;
     }

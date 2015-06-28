@@ -30,6 +30,12 @@ public class MessageConst {
 
         public static final int MSG_RESULT_FAIL = 0;
         public static final int MSG_RESULT_SUCCESS = 1;
+        public static final int SQL_OPREATION_FAILURE_INT = -1;
+        public static final String SQL_QUERY_FAILURE="sqlexp";
+        public static final String MSG_RESULT_SUCCESS_STRING = "suc";
+        public static final String MSG_RESULT_FAIL_STRIGN = "fail";
+        public static final int SQL_OPREATION_EXCEPTION_INT = -2;
+        public static final String SQL_OPREATION_EXCEPTION_STRING = "sqlexp";
     }
 
     public class MessageType {
@@ -46,6 +52,12 @@ public class MessageConst {
 
         // Message types sent from Client by company
         public static final int MSG_TYPE_COMPANY_SIGN_IN = 2000;
+        public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_COST = 2001;
+        public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_EARINGS = 2002;
+        public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_TIME_END = 2003;
+        public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_TIME_START =2004;
+        public static final int MSG_TYPE_COMPANY_LIST_BUSINESS = 2005;
+        public static final int MSG_TYPE_COMPANY_CREAT_BIDDING = 2006;
 
         // Message types sent from Client by normal user
         public static final int MSG_TYPE_USER_SIGN_IN = 3000;
@@ -56,6 +68,9 @@ public class MessageConst {
         public static final int MSG_TYPE_USER_DROP_BIDDING = 3005;
         public static final int MSG_TYPE_USER_SEND_PARK_INFO = 3006;
         public static final int MSG_TYPE_USER_LIST_MYCARS = 3007;
+        public static final int MSG_TYPE_USER_ADD_CARS = 3008;
+        public static final int MSG_TYPE_USER_UPDATE_ADING = 3009;
+        public static final int MSG_TYPE_USER_VOTING = 3010;
 
         // Message types sent from the BluetoothChatService Handler
         public static final int MSG_TYPE_BLUETOOTH_STATE_CHANGE = 11;
@@ -70,5 +85,23 @@ public class MessageConst {
 
 
     }
-
+    public class CAR_CONSTANSTS{
+    	public static final int CAR_STATE_CAN_BID = 1;
+    	public static final int CAR_STATE_GET_MONEY = 2;
+    	public static final int CAR_STATE_BLACK_LIST= -1;
+    	
+    }
+    public class BIDDING_CONSTANSTS{
+    	public static final String BIDDING_SUCCESSFUL = "suc";
+    	public static final String BIDDING_FAIL = "fail";
+    	
+    }
+    public class USER_CONSTANST{
+    	public static final int ALREADY_EXIST = -1;
+    	public static final int NOT_EXIST = 1;
+    	
+    }
+    public class BUSINESS_CONSTANST{
+    	public static final int MONEY_EXPENDED = 0;
+    }
 }

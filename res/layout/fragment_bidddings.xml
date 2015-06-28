@@ -48,6 +48,14 @@
                 android:layout_margin="5dp"
                 android:verticalSpacing="2dp" />
         </LinearLayout>
+         <!-- Test Button -->
+        <Button
+            android:id="@+id/btn_test_voting"
+            android:layout_width="wrap_content"
+            android:layout_height="35dip"
+            android:background="@drawable/login_btn_selector"
+            android:gravity="center"
+            android:text="testVoting" />
     </LinearLayout>
 
     <ProgressBar

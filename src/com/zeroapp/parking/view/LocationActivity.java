@@ -32,9 +32,12 @@ import java.util.List;
 
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.common.ParkingInfo;
 import com.zeroapp.parking.locator.LocateService;
 import com.zeroapp.parking.locator.Tracer;
+import com.zeroapp.parking.message.ClientServerMessage;
+import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 import com.zeroapp.utils.MyTime;
 
@@ -102,11 +105,36 @@ public class LocationActivity extends Activity implements Tracer {
     @Override
 	protected void onPause() {
 		mMapView.onPause();
+        testUpdateParkingInfo();
 		super.onPause();
         Log.e("- ON RESUME -");
 	}
 
-	@Override
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     */
+    private void testUpdateParkingInfo() {
+        long t = System.currentTimeMillis();
+        ParkingInfo p = mParkingList.get(0);
+        p.setLocationLatitude(l.getLatitude());
+        p.setLocationLongitude(l.getLongitude());
+        p.setTimeStart(t - 3200000);
+        p.setTimeEnd(t);
+        ClientServerMessage m = new ClientServerMessage();
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SEND_PARK_INFO);
+        m.setMessageContent(ObjToContent.getContent(p));
+        MainActivity.getBox().sendMessage(m);
+        Log.i("send over");
+        
+    }
+
+    @Override
 	protected void onResume() {
 		mMapView.onResume();
 		super.onResume();
