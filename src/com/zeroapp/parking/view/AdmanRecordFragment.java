@@ -45,7 +45,7 @@ import com.zeroapp.utils.Log;
 public class AdmanRecordFragment extends BaseFragment {
 
     private View mainView;
-    private MainActivity mainActivity;
+    private AdmanActivity mainActivity;
     private TextView wodeName;
     private ListView listViewTotal;
     private ProgressBar loadingBar;
@@ -55,8 +55,7 @@ public class AdmanRecordFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
-        // reqData = new HashMap<String, Object>();
+        mainActivity = (AdmanActivity) getActivity();
     }
 
     @Override
@@ -85,13 +84,12 @@ public class AdmanRecordFragment extends BaseFragment {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_MONEY);
         m.setMessageContent("money");// TODO
-        mainActivity.getBox().sendMessage(m);
+        mainActivity.mService.sendMessageToServer(m);
     }
 
     private void updateListViewTotal() {
         // TODO show on UI
         // test code
-        Log.i("updateListViewCars");
         TextView t = new TextView(mainActivity);
         t.setText("get Total success!");
         LayoutParams lp = llTotal.getLayoutParams();

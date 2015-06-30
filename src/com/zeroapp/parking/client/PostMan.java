@@ -29,9 +29,13 @@ import com.zeroapp.utils.Log;
 
 
 /**
- * <p>Title: TODO.</p>
- * <p>Description: TODO.</p>
- *
+ * <p>
+ * Title: PostMan.
+ * </p>
+ * <p>
+ * Description: 与服务器建立连接的工具类.
+ * </p>
+ * 
  * @author Alex(zeroapp@126.com) 2015-6-4.
  * @version $Id$
  */
@@ -73,10 +77,10 @@ public class PostMan implements Runnable {
 
     /**
      * <p>
-     * Title: TODO.
+     * Title: getConnectStateChangeListener.
      * </p>
      * <p>
-     * Description: TODO.
+     * Description: getConnectStateChangeListener.
      * </p>
      * 
      * @return the l.
@@ -87,10 +91,10 @@ public class PostMan implements Runnable {
 
     /**
      * <p>
-     * Title: TODO.
+     * Title: setConnectStateChangeListener.
      * </p>
      * <p>
-     * Description: TODO.
+     * Description: setConnectStateChangeListener.
      * </p>
      * 
      * @param l

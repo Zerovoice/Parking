@@ -31,13 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.common.ParkingInfo;
-import com.zeroapp.parking.locator.LocateService;
 import com.zeroapp.parking.locator.Tracer;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 import com.zeroapp.utils.MyTime;
 
@@ -58,7 +58,7 @@ public class LocationActivity extends Activity implements Tracer {
      */
     private boolean isFirstLoc = true;
     BDLocation l;
-    private LocateService mService;
+    private ClientService mService;
     private ListView lvCarsParingInfo;
     private List<ParkingInfo> mParkingList = new ArrayList<ParkingInfo>();
     private ServiceConnection connection;
@@ -94,7 +94,7 @@ public class LocationActivity extends Activity implements Tracer {
      */
     private void initParkingInfos() {
         // TODO Test Code
-        for (CarInfo c : MainActivity.myCars) {
+        for (CarInfo c : UserActivity.myCars) {
             ParkingInfo p = new ParkingInfo();
             p.setCarNum(c.getCarNum());
             mParkingList.add(p);
@@ -128,8 +128,8 @@ public class LocationActivity extends Activity implements Tracer {
         p.setTimeEnd(t);
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SEND_PARK_INFO);
-        m.setMessageContent(ObjToContent.getContent(p));
-        MainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(p));
+//        UserActivity.getBox().sendMessage(m);
         Log.i("send over");
         
     }
@@ -165,11 +165,11 @@ public class LocationActivity extends Activity implements Tracer {
             @Override
             public void onServiceConnected(ComponentName name, IBinder binder) {
                 Log.d("Connected " + name);
-                mService = ((LocateService.MyBinder) binder).getService();
+                mService = ((ClientService.MyBinder) binder).getService();
                 mService.addLocationListener(LocationActivity.this);
             }
         };
-        Intent i = new Intent(this, LocateService.class);
+        Intent i = new Intent(this, ClientService.class);
         i.setAction("com.zeroapp.parking.locator.LocateService");
         bindService(i, connection, Context.BIND_AUTO_CREATE);
 

@@ -2,6 +2,7 @@
 package com.zeroapp.parking.common;
 
 import com.zeroapp.utils.BmapPoint;
+import com.zeroapp.utils.JsonTool;
 
 
 public class Area {
@@ -32,7 +33,7 @@ public class Area {
 		}
 		public BmapPoint[] getbmapPointsInstance(String bmString){
 			if(bmString!=null){
-				return ContentToObj.getCoordinatesOfArea(bmString);
+				return JsonTool.getCoordinatesOfArea(bmString);
 			}else{
 				return null;
 			}

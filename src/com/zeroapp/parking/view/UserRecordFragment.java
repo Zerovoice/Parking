@@ -45,7 +45,7 @@ import com.zeroapp.utils.Log;
 public class UserRecordFragment extends BaseFragment {
 
     private View mainView;
-    private MainActivity mainActivity;
+    private UserActivity mainActivity;
     private TextView wodeName;
     private ListView listViewTotal;
     private ProgressBar loadingBar;
@@ -55,7 +55,7 @@ public class UserRecordFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (UserActivity) getActivity();
         // reqData = new HashMap<String, Object>();
     }
 
@@ -85,7 +85,7 @@ public class UserRecordFragment extends BaseFragment {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_MONEY);
         m.setMessageContent("money");// TODO
-        mainActivity.getBox().sendMessage(m);
+        mainActivity.mService.sendMessageToServer(m);
     }
 
     private void updateListViewTotal() {

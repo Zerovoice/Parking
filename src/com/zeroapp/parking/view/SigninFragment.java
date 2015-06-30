@@ -26,11 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 /**
@@ -51,7 +50,7 @@ public class SigninFragment extends BaseFragment {
 	private EditText editTextPwd;
 	private Button buttonSingin;
 	private Button buttonSingup;
-	private MainActivity mainActivity;
+	private UserActivity mainActivity;
     private ProgressBar loadingBar;
     private LinearLayout llSignin;
 
@@ -59,7 +58,7 @@ public class SigninFragment extends BaseFragment {
 	public void onAttach(Activity activity) {
 		Log.i("onAttach");
 		super.onAttach(activity);
-		mainActivity = (MainActivity) getActivity();
+		mainActivity = (UserActivity) getActivity();
 	}
 
 	@Override
@@ -115,8 +114,8 @@ public class SigninFragment extends BaseFragment {
     private void sendMeToServer() {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
-        m.setMessageContent(ObjToContent.getContent(mainActivity.me));
-        mainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(mainActivity.me));
+//        mainActivity.getBox().sendMessage(m);
 
     }
 
@@ -136,23 +135,26 @@ public class SigninFragment extends BaseFragment {
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-                    mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
+                    mainActivity.me = JsonTool.getUser(msg.getMessageContent());
                     if (mainActivity.me.getUserType().startsWith("0")) {
                         msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                     } else if (mainActivity.me.getUserType().startsWith("1")) {
                         msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
+                    } else if (mainActivity.me.getUserType().startsWith("2")) {
+//                        startSystem
                     }
-                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
+//                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
 
                 } else {
                     // TODO TOAST FAIL
-
-                    // 重新登录
+                    // 删除用户名和密码记录
+//                    mainActivity.prefNoVersion.edit().putString("account", null).commit();
+//                    mainActivity.prefNoVersion.edit().putString("password", null).commit();
                     // 删除me的记录
                     mainActivity.initUser();
                     ClientServerMessage m = new ClientServerMessage();
                     m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
-                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
+//                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
                 }
                 break;
             default:

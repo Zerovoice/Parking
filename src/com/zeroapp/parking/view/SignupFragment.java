@@ -26,11 +26,10 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 /**
@@ -47,7 +46,7 @@ import com.zeroapp.utils.Log;
 public class SignupFragment extends BaseFragment {
 
     private View mainView;
-    private MainActivity mainActivity;
+    private UserActivity mainActivity;
     private EditText accountEt;
     private EditText passwordEt;
     private CheckBox agreementCb;
@@ -58,7 +57,7 @@ public class SignupFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (UserActivity) getActivity();
     }
 
     /**
@@ -111,8 +110,8 @@ public class SignupFragment extends BaseFragment {
                     mainActivity.me.setPhoneNum(phoneNumEt.getText().toString());
                     ClientServerMessage m = new ClientServerMessage();
                     m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
-                    m.setMessageContent(ObjToContent.getContent(mainActivity.me));
-                    mainActivity.getBox().sendMessage(m);
+                    m.setMessageContent(JsonTool.getString(mainActivity.me));
+//                    mainActivity.getBox().sendMessage(m);
 
                     // 跳转fragment TODO
 //                    msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
@@ -126,7 +125,7 @@ public class SignupFragment extends BaseFragment {
             public void onClick(View arg0) {
                 ClientServerMessage m = new ClientServerMessage();
                 m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
-                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
+//                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
             }
         });
         return mainView;
@@ -163,13 +162,13 @@ public class SignupFragment extends BaseFragment {
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-                    mainActivity.me = ContentToObj.getUser(msg.getMessageContent());
+                    mainActivity.me = JsonTool.getUser(msg.getMessageContent());
                     if (mainActivity.me.getUserType().startsWith("0")) {
                         msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
                     } else if (mainActivity.me.getUserType().startsWith("1")) {
                         msg.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
                     }
-                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
+//                    mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, msg).sendToTarget();
                 } else {
                     // TODO TOAST FAIL
                 }

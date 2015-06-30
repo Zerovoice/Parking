@@ -15,6 +15,8 @@ package com.zeroapp.parking.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,14 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.dialog.BaseDialog;
 import com.zeroapp.parking.dialog.UpdateInfoDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 
@@ -59,7 +61,7 @@ import com.zeroapp.utils.Log;
 
 public class UserInfoFragment extends BaseFragment implements OnLongClickListener {
 
-    private MainActivity mainActivity;
+    private UserActivity mainActivity;
     private View mainView;
     private TextView name;
     private TextView phoneNum;
@@ -72,7 +74,7 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (UserActivity) getActivity();
     }
 
     @Override
@@ -97,14 +99,13 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
             @Override
             public void onClick(View v) {
                 // 删除用户名和密码记录
-                mainActivity.prefNoVersion.edit().putString("account", null).commit();
-                mainActivity.prefNoVersion.edit().putString("password", null).commit();
-                // 删除me的记录
-                mainActivity.initUser();
-                ClientServerMessage m = new ClientServerMessage();
-                m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
-                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
-
+                SharedPreferences prefNoVersion = getActivity().getApplicationContext().getSharedPreferences(ClientService.PREF_NAME, 0);
+                prefNoVersion.edit().putString("account", null).commit();
+                prefNoVersion.edit().putString("password", null).commit();
+                // 启动登录界面
+                Intent i = new Intent(mainActivity, SigninActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
             }
         });
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
@@ -151,8 +152,8 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
     private void requestMyCars() {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_MYCARS);
-        m.setMessageContent(ObjToContent.getContent(mainActivity.me));
-        mainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(mainActivity.me));
+        mainActivity.mService.sendMessageToServer(m);
 
     }
 
@@ -167,7 +168,7 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_LIST_MYCARS:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-                    mainActivity.myCars = ContentToObj.getUserCars(msg.getMessageContent());
+                    mainActivity.myCars = JsonTool.getUserCars(msg.getMessageContent());
                     // test code
 //                    for (int i = 0; i < mainActivity.myCars.size(); i++) {
 //                        Log.d(mainActivity.myCars.get(i).getCarNum());

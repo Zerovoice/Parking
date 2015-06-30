@@ -11,7 +11,7 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.parking.common;
+package com.zeroapp.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -21,8 +21,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-import com.zeroapp.utils.BmapPoint;
-import com.zeroapp.utils.Log;
+import com.zeroapp.parking.common.Bidding;
+import com.zeroapp.parking.common.Business;
+import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.User;
 
 
 /**
@@ -33,7 +35,12 @@ import com.zeroapp.utils.Log;
  * @version $Id$
  */
 
-public class ContentToObj {
+public class JsonTool {
+
+    public static String getString(Object o) {
+        return new Gson().toJson(o);
+
+    }
 
     /**
      * <p>
@@ -48,11 +55,11 @@ public class ContentToObj {
      */
     public static User getUser(String messageContent) {
         Log.i("messageContent: " + messageContent);
-        User u = new Gson().fromJson(messageContent, User.class);
-        // TODO test code
-//        u.setAccount("zxb");
-//        u.setPassword("123");
-        // test code
+        User u = null;
+        try {
+            u = new Gson().fromJson(messageContent, User.class);
+        } catch (Exception e) {
+        }
         return u;
     }
 

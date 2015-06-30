@@ -16,53 +16,40 @@ package com.zeroapp.parking.client;
 import android.app.Application;
 import android.content.Intent;
 
-import com.zeroapp.parking.locator.LocateService;
 import com.zeroapp.utils.Log;
 
 /**
- * <p>Title: TODO.</p>
- * <p>Description: TODO.</p>
- *
+ * <p>
+ * Title: ParkingApplication.
+ * </p>
+ * <p>
+ * Description: ParkingApplication.
+ * </p>
+ * 
  * @author Alex(zeroapp@126.com) 2015-6-17.
  * @version $Id$
  */
 
-public class LocationApplication extends Application {
+public class ParkingApplication extends Application {
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
+    public static final String SERVICE_ACTION = "com.zeroapp.parking.client.ClientService";
+
     @Override
     public void onCreate() {
         Log.i("");
         super.onCreate();
-        startLocateService();
+        startClientService();
     }
 
-    /**
-     * <p>
-     * Title: TODO.
-     * </p>
-     * <p>
-     * Description: TODO.
-     * </p>
-     * 
-     */
     @Override
     public void onTerminate() {
         // TODO Auto-generated method stub
         super.onTerminate();
     }
 
-    private void startLocateService() {
-        Intent i = new Intent(this, LocateService.class);
-        i.setAction("com.zeroapp.parking.locator.LocateService");
+    private void startClientService() {
+        Intent i = new Intent(this, ClientService.class);
+        i.setAction(SERVICE_ACTION);
         startService(i);
     }
 }

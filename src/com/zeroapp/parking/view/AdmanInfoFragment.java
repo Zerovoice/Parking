@@ -15,6 +15,8 @@ package com.zeroapp.parking.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +24,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,13 +34,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.dialog.BaseDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 
@@ -52,9 +52,9 @@ import com.zeroapp.utils.Log;
  * @version $Id$
  */
 
-public class AdertisingManInfoFragment extends BaseFragment implements OnLongClickListener {
+public class AdmanInfoFragment extends BaseFragment implements OnLongClickListener {
 
-    private MainActivity mainActivity;
+    private AdmanActivity mainActivity;
     private View mainView;
     private TextView name;
     private TextView phoneNum;
@@ -67,7 +67,7 @@ public class AdertisingManInfoFragment extends BaseFragment implements OnLongCli
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (AdmanActivity) getActivity();
     }
 
     @Override
@@ -92,47 +92,46 @@ public class AdertisingManInfoFragment extends BaseFragment implements OnLongCli
             @Override
             public void onClick(View v) {
                 // 删除用户名和密码记录
-                mainActivity.prefNoVersion.edit().putString("account", null).commit();
-                mainActivity.prefNoVersion.edit().putString("password", null).commit();
-                // 删除me的记录
-                mainActivity.initUser();
-                ClientServerMessage m = new ClientServerMessage();
-                m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SHOW_SIGN_IN);
-                mainActivity.mHandler.obtainMessage(MessageConst.MessageType.MESSAGE_UI, m).sendToTarget();
-
+                SharedPreferences prefNoVersion = getActivity().getApplicationContext().getSharedPreferences(ClientService.PREF_NAME, 0);
+                prefNoVersion.edit().putString("account", null).commit();
+                prefNoVersion.edit().putString("password", null).commit();
+                // 启动登录界面
+                Intent i = new Intent(mainActivity, SigninActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
             }
         });
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
-        if (mainActivity.myCars == null) {
-            requestMyCars();
-        } else {
-            updateListViewCars();
-        }
+//        if (mainActivity.myCars == null) {
+//            requestMyCars();
+//        } else {
+//            updateListViewCars();
+//        }
         return mainView;
     }
 
-    private void updateListViewCars() {
-        listViewCars.setAdapter(new MyCarsAdeptet(mainActivity, mainActivity.myCars));
-        listViewCars.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
-                CarInfo car = (CarInfo) adapterView.getAdapter().getItem(i);
-                // TODO new dialog
-                if (car != null) {
-                    Log.i("num: " + car.getCarNum());
-                    new BaseDialog(mainActivity, R.layout.device_list).show();
-                } else {
-                    new BaseDialog(mainActivity, R.layout.device_list).show();
-
-                }
-
-            }
-        });
-        // 隐藏缓冲圈
-        loadingBar.setVisibility(View.INVISIBLE);
-
-    }
+//    private void updateListViewCars() {
+//        listViewCars.setAdapter(new MyCarsAdeptet(mainActivity, mainActivity.myCars));
+//        listViewCars.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
+//                CarInfo car = (CarInfo) adapterView.getAdapter().getItem(i);
+//                // TODO new dialog
+//                if (car != null) {
+//                    Log.i("num: " + car.getCarNum());
+//                    new BaseDialog(mainActivity, R.layout.device_list).show();
+//                } else {
+//                    new BaseDialog(mainActivity, R.layout.device_list).show();
+//
+//                }
+//
+//            }
+//        });
+//        // 隐藏缓冲圈
+//        loadingBar.setVisibility(View.INVISIBLE);
+//
+//    }
 
     /**
      * <p>
@@ -146,8 +145,8 @@ public class AdertisingManInfoFragment extends BaseFragment implements OnLongCli
     private void requestMyCars() {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_MYCARS);
-        m.setMessageContent(ObjToContent.getContent(mainActivity.me));
-        mainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(mainActivity.me));
+        mainActivity.mService.sendMessageToServer(m);
 
     }
 
@@ -162,7 +161,7 @@ public class AdertisingManInfoFragment extends BaseFragment implements OnLongCli
         switch (msg.getMessageType()) {
             case MessageConst.MessageType.MSG_TYPE_USER_LIST_MYCARS:
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-                    mainActivity.myCars = ContentToObj.getUserCars(msg.getMessageContent());
+//                    mainActivity.myCars = JsonTool.getUserCars(msg.getMessageContent());
                     // test code
 //                    for (int i = 0; i < mainActivity.myCars.size(); i++) {
 //                        Log.d(mainActivity.myCars.get(i).getCarNum());
@@ -171,7 +170,7 @@ public class AdertisingManInfoFragment extends BaseFragment implements OnLongCli
                 } else {
                     // TODO TOSAT FAIL
                 }
-                updateListViewCars();
+//                updateListViewCars();
                 break;
 
             default:

@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
-        android:name="com.zeroapp.parking.client.LocationApplication"
+        android:name="com.zeroapp.parking.client.ParkingApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -43,9 +43,9 @@
             </intent-filter>
         </service>
         <service
-            android:name="com.zeroapp.parking.locator.LocateService">
+            android:name="com.zeroapp.parking.client.ClientService">
             <intent-filter>
-                <action android:name="com.zeroapp.parking.locator.LocateService" />
+                <action android:name="com.zeroapp.parking.client.ClientService" />
             </intent-filter>
         </service>
         <provider
@@ -63,8 +63,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.zeroapp.parking.view.MainActivity"
+            android:name="com.zeroapp.parking.view.UserActivity"
             android:screenOrientation="portrait" 
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name" >
+            
+        </activity>
+        <activity
+            android:name="com.zeroapp.parking.view.AdmanActivity"
+            android:screenOrientation="portrait" 
+            android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
@@ -75,6 +84,20 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
+        </activity>
+         <activity
+            android:name="com.zeroapp.parking.view.SigninActivity"
+            android:screenOrientation="portrait" 
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
+         <activity
+            android:name="com.zeroapp.parking.view.SignupActivity"
+            android:screenOrientation="portrait" 
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name" >
         </activity>
         <activity 
             android:name="com.zeroapp.parking.bluetooth.DeviceListActivity"

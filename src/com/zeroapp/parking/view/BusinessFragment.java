@@ -31,11 +31,10 @@ import java.util.List;
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.Bidding;
 import com.zeroapp.parking.common.Business;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 
@@ -52,7 +51,7 @@ import com.zeroapp.utils.Log;
  */
 public class BusinessFragment extends BaseFragment {
 
-    private MainActivity mainActivity;
+    private AdmanActivity mainActivity;
     private View mainView;
     private TextView cityName;
     private ListView listViewBiddings;
@@ -64,7 +63,7 @@ public class BusinessFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (AdmanActivity) getActivity();
     }
 
     @Override
@@ -105,8 +104,8 @@ public class BusinessFragment extends BaseFragment {
         b.setUserID(mainActivity.me.getUserID());
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_COMPANY_CREAT_BIDDING);
-        m.setMessageContent(ObjToContent.getContent(b));
-        mainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(b));
+        mainActivity.mService.sendMessageToServer(m);
 
     }
 
@@ -123,7 +122,7 @@ public class BusinessFragment extends BaseFragment {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_COMPANY_LIST_BUSINESS);
         m.setMessageContent("qingdao");// TODO
-        mainActivity.getBox().sendMessage(m);
+        mainActivity.mService.sendMessageToServer(m);
 
     }
 
@@ -153,7 +152,7 @@ public class BusinessFragment extends BaseFragment {
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
                     Log.d("getMessageContent: " + msg.getMessageContent());
-                    bs = ContentToObj.getBusinessList(msg.getMessageContent());
+                    bs = JsonTool.getBusinessList(msg.getMessageContent());
                     Log.d("getEarnings: " + bs.get(0).getEarnings());
                 } else if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
                     Log.i("fail");

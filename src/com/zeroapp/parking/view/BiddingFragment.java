@@ -30,12 +30,11 @@ import java.util.List;
 
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.Bidding;
-import com.zeroapp.parking.common.ContentToObj;
-import com.zeroapp.parking.common.ObjToContent;
 import com.zeroapp.parking.common.Voting;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 
@@ -52,7 +51,7 @@ import com.zeroapp.utils.Log;
  */
 public class BiddingFragment extends BaseFragment {
 
-    private MainActivity mainActivity;
+    private UserActivity mainActivity;
     private View mainView;
     private TextView cityName;
     private ListView listViewBiddings;
@@ -64,7 +63,7 @@ public class BiddingFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         Log.i("onAttach");
         super.onAttach(activity);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (UserActivity) getActivity();
     }
 
     @Override
@@ -96,8 +95,8 @@ public class BiddingFragment extends BaseFragment {
         v.setBiddingID(bs.get(0).getBiddingID());
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_VOTING);
-        m.setMessageContent(ObjToContent.getContent(v));
-        mainActivity.getBox().sendMessage(m);
+        m.setMessageContent(JsonTool.getString(v));
+        mainActivity.mService.sendMessageToServer(m);
 
     }
     /**
@@ -113,7 +112,7 @@ public class BiddingFragment extends BaseFragment {
         ClientServerMessage m = new ClientServerMessage();
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_LIST_BIDDING);
         m.setMessageContent("qingdao");// TODO
-        mainActivity.getBox().sendMessage(m);
+        mainActivity.mService.sendMessageToServer(m);
     }
 
     private void updateListViewBiddings() {
@@ -142,8 +141,8 @@ public class BiddingFragment extends BaseFragment {
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
                     Log.d("getMessageContent: " + msg.getMessageContent());
-                    bs = ContentToObj.getBiddingsList(msg.getMessageContent());
-                    Log.d("getEarnings: " + bs.get(0).getBusinessID());
+                    bs = JsonTool.getBiddingsList(msg.getMessageContent());
+//                    Log.d("getEarnings: " + bs.get(0).getBusinessID());
                 } else if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
                     Log.i("fail");
                 }
