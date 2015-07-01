@@ -31,12 +31,12 @@ import java.util.ArrayList;
 
 import com.zeroapp.parking.common.ParkingInfo;
 import com.zeroapp.parking.common.User;
-import com.zeroapp.parking.locator.PositionTracer;
 import com.zeroapp.parking.locator.Tracer;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.parking.view.AdmanActivity;
 import com.zeroapp.parking.view.SigninActivity;
+import com.zeroapp.parking.view.SysAdminActivity;
 import com.zeroapp.parking.view.UserActivity;
 import com.zeroapp.utils.GraphTool;
 import com.zeroapp.utils.JsonTool;
@@ -60,7 +60,7 @@ public class ClientService extends Service implements OnConnectStateChangeListen
     /**
      * broadcast intent action
      */
-    public static final String ACTION_LIST_CARS = "com.zeroapp.parking.ACTION_LIST_CARS";
+    public static final String ACTION_MESSAGE = "com.zeroapp.parking.ACTION_MESSAGE";
     /**
      * broadcast intent action
      */
@@ -94,8 +94,6 @@ public class ClientService extends Service implements OnConnectStateChangeListen
     private LocationClient mLocClient;
     private SharedPreferences prefNoVersion = null;
     private MyBinder mBinder = new MyBinder();
-    private BDLocation mRequestLocation;
-    private PositionTracer mTracer = null;
     private ArrayList<Tracer> mTracerManager = new ArrayList<Tracer>();
     private ArrayList<ParkingInfo> mParkingManager = new ArrayList<ParkingInfo>();
     private MessageBox mBox;
@@ -117,8 +115,8 @@ public class ClientService extends Service implements OnConnectStateChangeListen
             switch (msg.what) {
                 case MessageConst.MessageType.MESSAGE_FROM_SERVER:
                     ClientServerMessage m = (ClientServerMessage) msg.obj;
+                    Intent i = null;
                     if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
-                        Intent i = null;
                         switch (m.getMessageType()) {
                             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
                             case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
@@ -126,33 +124,33 @@ public class ClientService extends Service implements OnConnectStateChangeListen
                                 // remember me
                                 prefNoVersion.edit().putString("account", me.getAccount()).commit();
                                 prefNoVersion.edit().putString("password", me.getPassword()).commit();
-                                if (me.getUserType().startsWith("0")) {
+                                if (me.getUserType().startsWith("3")) {
                                     // 启动普通用户详情界面
                                     i = new Intent(ClientService.this, UserActivity.class);
-                                } else if (me.getUserType().startsWith("1")) {
-                                    // 启动普通用户详情界面
-                                    i = new Intent(ClientService.this, AdmanActivity.class);
                                 } else if (me.getUserType().startsWith("2")) {
-                                    // 启动普通用户详情界面
-//                                    i = new Intent(ClientService.this, UserActivity.class);
+                                    // 启动广告商详情界面
+                                    i = new Intent(ClientService.this, AdmanActivity.class);
+                                } else if (me.getUserType().startsWith("1")) {
+                                    // 启动系统用户详情界面
+                                    i = new Intent(ClientService.this, SysAdminActivity.class);
                                 }
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 i.putExtra("me", m.getMessageContent());
                                 startActivity(i);
                                 break;
-                            case MessageConst.MessageType.MSG_TYPE_USER_LIST_MYCARS:
-                                i = new Intent(ACTION_LIST_CARS);
-                                i.putExtra("mycars", m);
-                                sendBroadcast(i);
-                                break;
 
                             default:
+                                i = new Intent(ACTION_MESSAGE);
+                                i.putExtra("message", m);
+                                sendBroadcast(i);
                                 break;
                         }
                     } else {
                         Log.w(m.getMessageType() + "  Fail!");
+                        i = new Intent(ACTION_MESSAGE);
+                        i.putExtra("message", m);
+                        sendBroadcast(i);
                     }
-//                    f.refreshUI((AMessage) msg.obj);
                     break;
                 case MessageConst.MessageType.MESSAGE_UI:
 //                    dealUIMessage((AMessage) msg.obj);
@@ -209,7 +207,7 @@ public class ClientService extends Service implements OnConnectStateChangeListen
         return me;
     }
 
-    public void singIn() {
+    public void signIn() {
         prefNoVersion = getApplicationContext().getSharedPreferences(PREF_NAME, 0);
         me.setAccount(prefNoVersion.getString("account", null));
         me.setPassword(prefNoVersion.getString("password", null));

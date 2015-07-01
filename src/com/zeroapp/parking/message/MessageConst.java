@@ -49,6 +49,9 @@ public class MessageConst {
 
         // Message types sent from Client by admin
         public static final int MSG_TYPE_ADMIN_SIGN_IN = 1000;
+        public static final int MSG_TYPE_ADMIN_SEARCH_USER = 1001;
+        public static final int MSG_TYPE_ADMIN_UPDATE_USER_INFO = 1002;
+        public static final int MSG_TYPE_ADMIN_UPDATE_CAR_STATE = 1003;
 
         // Message types sent from Client by company
         public static final int MSG_TYPE_COMPANY_SIGN_IN = 2000;
@@ -58,6 +61,7 @@ public class MessageConst {
         public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_TIME_START =2004;
         public static final int MSG_TYPE_COMPANY_LIST_BUSINESS = 2005;
         public static final int MSG_TYPE_COMPANY_CREAT_BIDDING = 2006;
+        public static final int MSG_TYPE_COMPANY_LIST_RECORD = 2007;
 
         // Message types sent from Client by normal user
         public static final int MSG_TYPE_USER_SIGN_IN = 3000;
@@ -82,6 +86,7 @@ public class MessageConst {
         public static final int MSG_TYPE_UI_SHOW_ADMAN_INFO = 19;
         public static final int MSG_TYPE_UI_SHOW_SIGN_IN = 17;
         public static final int MSG_TYPE_UI_DISMISS_LOADING = 18;
+        public static final int MSG_TYPE_UI_SEVICE_CONNECTED = 19;
 
 
     }

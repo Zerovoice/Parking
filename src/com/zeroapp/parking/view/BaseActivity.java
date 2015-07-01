@@ -13,9 +13,11 @@
 
 package com.zeroapp.parking.view;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -24,6 +26,9 @@ import android.support.v4.app.FragmentActivity;
 import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.client.ParkingApplication;
 import com.zeroapp.parking.common.User;
+import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.parking.message.UIMessage;
 import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
@@ -40,6 +45,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected ClientService mService;
     private ServiceConnection connection;
     protected User me = null;
+    private MsgBroadcastReceiver mReceiver;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +59,12 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         unbindService(connection);
+        unregisterReceiver(mReceiver);
         super.onDestroy();
         Log.e("--- ON DESTROY ---");
     }
 
+    public abstract void dealMessage(AMessage m);
     private void bindClientService() {
         connection = new ServiceConnection() {
 
@@ -70,8 +78,9 @@ public abstract class BaseActivity extends FragmentActivity {
             public void onServiceConnected(ComponentName name, IBinder binder) {
                 Log.d("Connected " + name);
                 mService = ((ClientService.MyBinder) binder).getService();
-                Intent i = new Intent(ClientService.ACTION_SERVICE_CONNECTED);
-                sendBroadcast(i);
+                UIMessage m = new UIMessage();
+                m.setMessageType(MessageConst.MessageType.MSG_TYPE_UI_SEVICE_CONNECTED);
+                dealMessage(m);
                 if (me == null) {
                     me = mService.getUserInfo();
                 }
@@ -81,6 +90,20 @@ public abstract class BaseActivity extends FragmentActivity {
         i.setAction(ParkingApplication.SERVICE_ACTION);
         bindService(i, connection, Context.BIND_AUTO_CREATE);
 
+        mReceiver = new MsgBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ClientService.ACTION_MESSAGE);
+        registerReceiver(mReceiver, filter);
     }
 
+    private class MsgBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context ctx, Intent i) {
+            Log.i(i.getAction());
+            if (i.getAction().equals(ClientService.ACTION_MESSAGE)) {
+                dealMessage((AMessage) i.getSerializableExtra("message"));
+            }
+        }
+    }
 }

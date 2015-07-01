@@ -10,6 +10,7 @@
     <string name="signin">Signin</string>
     <string name="signup">Signup</string>
     <string name="signout">SignOut</string>
+    <string name="update">Update</string>
     <string name="account">Account:</string>
     <string name="pssword">Password:</string>
     <string name="phone_number">PhoneNumber:</string>
@@ -20,6 +21,7 @@
     <string name="tobe_advertising_man">Sign up as an advertising man</string>
     <string name="agreement">Agreed to user agreement</string>
     <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
     <string name="user_info">UserInfo</string>
     <string name="adman_info">AdmanInfo</string>
     <string name="adman_record">Record</string>

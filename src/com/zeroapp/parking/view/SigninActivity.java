@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.User;
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.JsonTool;
@@ -46,6 +47,7 @@ public class SigninActivity extends BaseActivity {
     private Button buttonSingup;
     private ProgressBar loadingBar;
     private LinearLayout llSignin;
+    private User newUser = new User();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +69,9 @@ public class SigninActivity extends BaseActivity {
                 if (editTextAccount.getText().toString().equals("") || editTextPwd.getText().toString().equals("")) {
                     Toast.makeText(SigninActivity.this, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    me.setAccount(editTextAccount.getText().toString());
-                    me.setPassword(editTextPwd.getText().toString());
-                    sendMeToServer(me);
+                    newUser.setAccount(editTextAccount.getText().toString());
+                    newUser.setPassword(editTextPwd.getText().toString());
+                    sendMeToServer(newUser);
                     llSignin.setVisibility(View.INVISIBLE);
                     loadingBar.setVisibility(View.VISIBLE);
                 }
@@ -100,5 +102,21 @@ public class SigninActivity extends BaseActivity {
         m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN);
         m.setMessageContent(JsonTool.getString(me));
         mService.sendMessageToServer(m);
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param m
+     */
+    @Override
+    public void dealMessage(AMessage m) {
+        // TODO Auto-generated method stub
+
     }
 }

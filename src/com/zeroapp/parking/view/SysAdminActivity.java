@@ -12,17 +12,23 @@
  */
 package com.zeroapp.parking.view;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.client.ClientService;
+import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.message.AMessage;
-import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
 /**
@@ -36,12 +42,16 @@ import com.zeroapp.utils.Log;
  * @author Alex(zeroapp@126.com) 2015-5-27.
  * @version $Id$
  */
-public class AdmanActivity extends BaseActivity implements OnClickListener {
+public class SysAdminActivity extends BaseActivity implements OnClickListener {
 
-	private BaseFragment f = null;
-    private TextView balance = null;
+    public static List<CarInfo> myCars = null;
+    private TextView search;
     private long mExitTime = 0;
-    private int lastClick = 0;// 记录上次点击的viewid,用于防止重复点击的逻辑
+    private TextView etUserName;
+    private TextView etUserPhone;
+    private TextView etUserIdNum;
+    private ProgressBar loadingBar;
+    private User user = new User();
 
 
 	@Override
@@ -49,7 +59,7 @@ public class AdmanActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		Log.e("+++ ON CREATE +++");
 		// Set up the window layout
-        setContentView(R.layout.activity_adman);
+        setContentView(R.layout.activity_admin);
 		initView();
         initUser();
 	}
@@ -79,58 +89,43 @@ public class AdmanActivity extends BaseActivity implements OnClickListener {
     }
 
 	private void initView() {
-        balance = (TextView) findViewById(R.id.balance);
-        findViewById(R.id.btn_adman_info).setOnClickListener(this);
-        findViewById(R.id.btn_show_adman_record).setOnClickListener(this);
-        findViewById(R.id.btn_show_business).setOnClickListener(this);
-        // update balance
-        balance.setText(me.getAccountBanlance() + "");
+        search = (TextView) findViewById(R.id.et_search);
+        etUserName = (TextView) findViewById(R.id.user_name);
+        etUserPhone = (TextView) findViewById(R.id.user_phone);
+        etUserIdNum = (TextView) findViewById(R.id.user_idnum);
+        findViewById(R.id.btn_serach).setOnClickListener(this);
+        findViewById(R.id.btn_update).setOnClickListener(this);
+        findViewById(R.id.btn_signout).setOnClickListener(this);
         getActionBar().setTitle(me.getName());
+        loadingBar = (ProgressBar) findViewById(R.id.loading);
 	}
     public void initUser() {
-        lastClick = 0;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_serach:
 
-	@Override
-	public void onClick(View v) {
-        if (lastClick != v.getId()) {
-            // 恢复之前click的view 的点击状态
-            if (lastClick != 0) {
-                findViewById(lastClick).setAlpha(1);
-                findViewById(lastClick).setClickable(true);
-            }
-            // 设置新click的view 的状态
-            v.setClickable(false);
-            v.setAlpha(0.5f);
-            lastClick = v.getId();
-        }
-		showFragment(v.getId());
-	}
-	public void showFragment(int id) {
-		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        switch (id) {
-            case MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO:
-            case R.id.btn_adman_info:
-                if (lastClick == 0) {
-                    lastClick = R.id.btn_adman_info;
-                    findViewById(lastClick).setAlpha(0.5f);
-                    findViewById(lastClick).setClickable(false);
-                }
-                f = new AdmanInfoFragment();
                 break;
-            case R.id.btn_show_business:
-                f = new BusinessFragment();
+            case R.id.btn_update:
+
                 break;
-            case R.id.btn_show_adman_record:
-                f = new AdmanRecordFragment();
+            case R.id.btn_signout:
+                // 删除用户名和密码记录
+                SharedPreferences prefNoVersion = getApplicationContext().getSharedPreferences(ClientService.PREF_NAME, 0);
+                prefNoVersion.edit().putString("account", null).commit();
+                prefNoVersion.edit().putString("password", null).commit();
+                // 启动登录界面
+                Intent i = new Intent(SysAdminActivity.this, SigninActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
                 break;
 
             default:
                 break;
         }
-        t.replace(R.id.topfl_container, f).commit();
-	}
+    }
 
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -155,13 +150,7 @@ public class AdmanActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void dealMessage(AMessage m) {
-        switch (m.getMessageType()) {
-            case MessageConst.MessageType.MSG_TYPE_UI_SEVICE_CONNECTED:
-                showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_ADMAN_INFO);
-                break;
-            default:
-                f.refreshUI(m);
-                break;
-        }
+        // TODO Auto-generated method stub
+
     }
 }

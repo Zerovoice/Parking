@@ -26,6 +26,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.zeroapp.parking.R;
+import com.zeroapp.parking.common.User;
+import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.JsonTool;
@@ -52,6 +54,7 @@ public class SignupActivity extends BaseActivity {
     private CheckBox agreementCb;
     private CheckBox adManCb;
     private EditText phoneNumEt;
+    protected User newUser = new User();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +82,7 @@ public class SignupActivity extends BaseActivity {
 
             public void onCheckedChanged(RadioGroup arg0, int id) {
                 if (id == R.id.register_radio_nv) {
-                    me.setSex(0);// 女
+                    newUser.setSex(0);// 女
                 }
             }
         });
@@ -98,12 +101,12 @@ public class SignupActivity extends BaseActivity {
                     // TODO 检查手机号码是否违规
                     Toast.makeText(SignupActivity.this, "手机号码不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    me.setAccount(accountEt.getText().toString());
-                    me.setPassword(passwordEt.getText().toString());
-                    me.setPhoneNum(phoneNumEt.getText().toString());
+                    newUser.setAccount(accountEt.getText().toString());
+                    newUser.setPassword(passwordEt.getText().toString());
+                    newUser.setPhoneNum(phoneNumEt.getText().toString());
                     ClientServerMessage m = new ClientServerMessage();
                     m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP);
-                    m.setMessageContent(JsonTool.getString(me));
+                    m.setMessageContent(JsonTool.getString(newUser));
                     mService.sendMessageToServer(m);
                     rlSignin.setVisibility(View.INVISIBLE);
                     loadingBar.setVisibility(View.VISIBLE);
@@ -120,6 +123,22 @@ public class SignupActivity extends BaseActivity {
                 startActivity(i);
             }
         });
+
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param m
+     */
+    @Override
+    public void dealMessage(AMessage m) {
+        // TODO Auto-generated method stub
 
     }
 

@@ -11,7 +11,7 @@
  * OF CIRCUMVENTING LICENSING LIMITATIONS, LEGAL ACTION MAY RESULT.
  */
 
-package com.zeroapp.utils;
+package com.zeroapp.parking.message;
 
 
 /**
@@ -25,12 +25,11 @@ package com.zeroapp.utils;
  * @author Alex(zeroapp@126.com) 2015-5-28.
  * @version $Id$
  */
+public class UIMessage extends AMessage {
 
-public class Config {
+    /**
+     * TODO
+     */
+    private static final long serialVersionUID = -475392312065186579L;
 
-    public static final String HOST_ADRESS = "192.168.1.104";
-    public static final int HOST_PORT = 8080;
-//    public static final String HOST_ADRESS = "rwathena.eicp.net";
-//    public static final int HOST_PORT = 20058;
-    public static final boolean USE_DB = true;
 }

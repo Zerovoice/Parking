@@ -1,23 +1,19 @@
 package com.zeroapp.parking.view;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ClientService;
+import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.Log;
 
 public class SplashActivity extends BaseActivity {
 
 
-    private MyBroadcastReceiver mReceiver;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +27,6 @@ public class SplashActivity extends BaseActivity {
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        mReceiver = new MyBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ClientService.ACTION_SERVICE_CONNECTED);
-        registerReceiver(mReceiver, filter);
 	}
     @Override
     protected void onStop() {
@@ -45,20 +37,14 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
         Log.e("--- ON DESTROY ---");
     }
 
-    private class MyBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context ctx, Intent i) {
-            Log.i(i.getAction());
-            if (i.getAction().equals(ClientService.ACTION_SERVICE_CONNECTED)) {
-                mService.singIn();
-            }
+    @Override
+    public void dealMessage(AMessage m) {
+        if (m.getMessageType() == MessageConst.MessageType.MSG_TYPE_UI_SEVICE_CONNECTED) {
+            mService.signIn();
         }
-
     }
 
 }

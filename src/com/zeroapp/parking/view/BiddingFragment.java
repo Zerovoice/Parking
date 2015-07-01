@@ -141,7 +141,7 @@ public class BiddingFragment extends BaseFragment {
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
                     Log.d("getMessageContent: " + msg.getMessageContent());
-                    bs = JsonTool.getBiddingsList(msg.getMessageContent());
+                    bs = JsonTool.getBiddingsList(msg.getMessageContent());// TODO
 //                    Log.d("getEarnings: " + bs.get(0).getBusinessID());
                 } else if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
                     Log.i("fail");

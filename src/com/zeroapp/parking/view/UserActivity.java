@@ -12,10 +12,6 @@
  */
 package com.zeroapp.parking.view;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -27,7 +23,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -52,7 +47,6 @@ public class UserActivity extends BaseActivity implements OnClickListener {
     private TextView balance = null;
     private long mExitTime = 0;
     private int lastClick = 0;// 记录上次点击的viewid,用于防止重复点击的逻辑
-    private MyBroadcastReceiver mReceiver;
 
 
 	@Override
@@ -86,7 +80,6 @@ public class UserActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
         Log.e("--- ON DESTROY ---");
     }
 
@@ -102,11 +95,6 @@ public class UserActivity extends BaseActivity implements OnClickListener {
     public void initUser() {
         myCars = null;
         lastClick = 0;
-        mReceiver = new MyBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ClientService.ACTION_LIST_CARS);
-        filter.addAction(ClientService.ACTION_SERVICE_CONNECTED);
-        registerReceiver(mReceiver, filter);
     }
 
 	@Override
@@ -170,17 +158,17 @@ public class UserActivity extends BaseActivity implements OnClickListener {
         return super.onKeyDown(keyCode, event);
 	}
 
-    private class MyBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context ctx, Intent i) {
-            Log.i(i.getAction());
-            if (i.getAction().equals(ClientService.ACTION_LIST_CARS)) {
-                f.refreshUI((AMessage) i.getParcelableExtra("mycars"));
-            } else if (i.getAction().equals(ClientService.ACTION_SERVICE_CONNECTED)) {
+    @Override
+    public void dealMessage(AMessage m) {
+        switch (m.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_UI_SEVICE_CONNECTED:
                 showFragment(MessageConst.MessageType.MSG_TYPE_UI_SHOW_USER_INFO);
-            }
+                break;
+            default:
+                f.refreshUI(m);
+                break;
         }
-	    
-	}
+    }
+
+
 }
