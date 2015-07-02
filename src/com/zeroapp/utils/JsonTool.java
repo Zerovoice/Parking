@@ -22,8 +22,10 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import com.zeroapp.parking.common.Bidding;
+import com.zeroapp.parking.common.BiddingContainer;
 import com.zeroapp.parking.common.Business;
 import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.ParkingInfo;
 import com.zeroapp.parking.common.User;
 
 
@@ -54,7 +56,6 @@ public class JsonTool {
      * @return
      */
     public static User getUser(String messageContent) {
-        Log.i("messageContent: " + messageContent);
         User u = null;
         try {
             u = new Gson().fromJson(messageContent, User.class);
@@ -70,13 +71,11 @@ public class JsonTool {
 //    }
 
     public static CarInfo getCarInfo(String messageContent) {
-        Log.i("messageContent: " + messageContent);
         CarInfo o = new Gson().fromJson(messageContent, CarInfo.class);
         return o;
     }
 
     public static Bidding getBidding(String messageContent) {
-        Log.i("messageContent: " + messageContent);
         Bidding o = new Gson().fromJson(messageContent, Bidding.class);
         return o;
     }
@@ -152,6 +151,31 @@ public class JsonTool {
         List<Bidding> bs = g.fromJson(messageContent, new TypeToken<List<Bidding>>() {
         }.getType());
         return bs;
+    }
+
+    /**
+     * <p>
+     * Title: TODO.
+     * </p>
+     * <p>
+     * Description: TODO.
+     * </p>
+     * 
+     * @param messageContent
+     * @return
+     */
+    public static List<BiddingContainer> getBiddingsContainerList(String messageContent) {
+        Gson g = new Gson();
+        List<BiddingContainer> bs = g.fromJson(messageContent, new TypeToken<List<BiddingContainer>>() {
+        }.getType());
+        return bs;
+    }
+
+    public static List<ParkingInfo> getParkingInfoList(String messageContent) {
+        Gson g = new Gson();
+        List<ParkingInfo> ps = g.fromJson(messageContent, new TypeToken<List<ParkingInfo>>() {
+        }.getType());
+        return ps;
     }
 
 }

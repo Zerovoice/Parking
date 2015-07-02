@@ -106,6 +106,7 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
                 Intent i = new Intent(mainActivity, SigninActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+                mainActivity.finish();
             }
         });
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);

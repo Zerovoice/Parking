@@ -29,6 +29,7 @@ public class MessageConst {
     public class MessageResult {
 
         public static final int MSG_RESULT_FAIL = 0;
+        public static final int MSG_RESULT_PARKING_NOT_AVAILABLE = -1001;
         public static final int MSG_RESULT_SUCCESS = 1;
         public static final int SQL_OPREATION_FAILURE_INT = -1;
         public static final String SQL_QUERY_FAILURE="sqlexp";
@@ -60,8 +61,8 @@ public class MessageConst {
         public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_TIME_END = 2003;
         public static final int MSG_TYPE_COMPANY_UPDATE_ITEM_TIME_START =2004;
         public static final int MSG_TYPE_COMPANY_LIST_BUSINESS = 2005;
-        public static final int MSG_TYPE_COMPANY_CREAT_BIDDING = 2006;
-        public static final int MSG_TYPE_COMPANY_LIST_RECORD = 2007;
+        public static final int MSG_TYPE_COMPANY_CREATE_BIDDING = 2006;
+        public static final int MSG_TYPE_COMPANY_LIST_COST = 2007;
 
         // Message types sent from Client by normal user
         public static final int MSG_TYPE_USER_SIGN_IN = 3000;
@@ -74,7 +75,8 @@ public class MessageConst {
         public static final int MSG_TYPE_USER_LIST_MYCARS = 3007;
         public static final int MSG_TYPE_USER_ADD_CARS = 3008;
         public static final int MSG_TYPE_USER_UPDATE_ADING = 3009;
-        public static final int MSG_TYPE_USER_VOTING = 3010;
+//        public static final int MSG_TYPE_USER_SET_BIDDING_CAR = 3010;
+        public static final int MSG_TYPE_USER_CREATE_VOTING = 3010;
 
         // Message types sent from the BluetoothChatService Handler
         public static final int MSG_TYPE_BLUETOOTH_STATE_CHANGE = 11;
@@ -107,6 +109,14 @@ public class MessageConst {
     	
     }
     public class BUSINESS_CONSTANST{
-    	public static final int MONEY_EXPENDED = 0;
+    	public static final String MONEY_EXPENDED = "nomeny";
+    	public static final String OUT_OF_MONEY = "outofmoney";
+    }
+    public class AREA_CONSTANST{
+    	public static final String NO_THIS_AREA = "noarea";
+    }
+    public class PARKING_CONSTANST{
+    	public static final String NO_ENOUGH_MONEY_PARKING = "nomoneyparking";
+    	public static final String UNAVAILABLE_PARKING = "unavailable";
     }
 }

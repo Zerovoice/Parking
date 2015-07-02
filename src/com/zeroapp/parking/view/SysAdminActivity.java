@@ -29,6 +29,9 @@ import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.common.User;
 import com.zeroapp.parking.message.AMessage;
+import com.zeroapp.parking.message.ClientServerMessage;
+import com.zeroapp.parking.message.MessageConst;
+import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
 
 /**
@@ -78,7 +81,6 @@ public class SysAdminActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        finish();
         Log.e("-- ON STOP --");
     }
 
@@ -106,7 +108,16 @@ public class SysAdminActivity extends BaseActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_serach:
-
+                if (search.getText().toString().equals("")) {//TODO check phoneNum
+                    Toast.makeText(SysAdminActivity.this, "号码不符合规则", Toast.LENGTH_SHORT).show();
+                } else {
+                    user.setPhoneNum(search.getText().toString());
+                    ClientServerMessage m = new ClientServerMessage();
+                    m.setMessageType(MessageConst.MessageType.MSG_TYPE_ADMIN_SEARCH_USER);
+                    m.setMessageContent(JsonTool.getString(user));
+                    m.setMessageParameters("" + me.getUserID());
+                    mService.sendMessageToServer(m);
+                }
                 break;
             case R.id.btn_update:
 
@@ -120,6 +131,7 @@ public class SysAdminActivity extends BaseActivity implements OnClickListener {
                 Intent i = new Intent(SysAdminActivity.this, SigninActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+                finish();
                 break;
 
             default:
@@ -150,7 +162,21 @@ public class SysAdminActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void dealMessage(AMessage m) {
-        // TODO Auto-generated method stub
+        switch (m.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_ADMIN_SEARCH_USER:
+                if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
+                    user = JsonTool.getUser(m.getMessageContent());
+                    etUserName.setText(user.getName());
+                    etUserPhone.setText(user.getPhoneNum());
+                    etUserIdNum.setText(user.getIdentityNum());
+                } else {
+                    Toast.makeText(this, "没找到用户", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            default:
+                break;
+        }
 
     }
 }

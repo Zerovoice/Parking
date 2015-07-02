@@ -6,25 +6,13 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/num"
+        android:id="@+id/car_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp" />
 
     <TextView
         android:id="@+id/earning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/area_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/company_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -42,6 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/parking_addr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="20sp" />
 
 </LinearLayout>

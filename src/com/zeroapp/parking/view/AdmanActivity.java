@@ -68,7 +68,6 @@ public class AdmanActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        finish();
         Log.e("-- ON STOP --");
     }
 

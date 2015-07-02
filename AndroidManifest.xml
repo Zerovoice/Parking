@@ -65,7 +65,7 @@
         <activity
             android:name="com.zeroapp.parking.view.UserActivity"
             android:screenOrientation="portrait" 
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
@@ -73,7 +73,7 @@
         <activity
             android:name="com.zeroapp.parking.view.AdmanActivity"
             android:screenOrientation="portrait" 
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
@@ -81,7 +81,7 @@
         <activity
             android:name="com.zeroapp.parking.view.SysAdminActivity"
             android:screenOrientation="portrait" 
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
@@ -89,6 +89,7 @@
         <activity
             android:name="com.zeroapp.parking.view.LocationActivity"
             android:screenOrientation="portrait" 
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             
@@ -96,14 +97,14 @@
          <activity
             android:name="com.zeroapp.parking.view.SigninActivity"
             android:screenOrientation="portrait" 
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
         </activity>
          <activity
             android:name="com.zeroapp.parking.view.SignupActivity"
             android:screenOrientation="portrait" 
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
         </activity>

@@ -14,12 +14,15 @@
 package com.zeroapp.parking.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,7 +32,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import com.zeroapp.parking.R;
-import com.zeroapp.parking.common.Bidding;
+import com.zeroapp.parking.common.BiddingContainer;
 import com.zeroapp.parking.common.Voting;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
@@ -57,7 +60,7 @@ public class BiddingFragment extends BaseFragment {
     private ListView listViewBiddings;
     private ProgressBar loadingBar;
     private LinearLayout llBidding;
-    private List<Bidding> bs;
+    private List<BiddingContainer> bs;
 
     @Override
     public void onAttach(Activity activity) {
@@ -94,7 +97,7 @@ public class BiddingFragment extends BaseFragment {
         v.setCarNum(mainActivity.myCars.get(0).getCarNum());
         v.setBiddingID(bs.get(0).getBiddingID());
         ClientServerMessage m = new ClientServerMessage();
-        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_VOTING);
+        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_CREATE_VOTING);
         m.setMessageContent(JsonTool.getString(v));
         mainActivity.mService.sendMessageToServer(m);
 
@@ -116,15 +119,14 @@ public class BiddingFragment extends BaseFragment {
     }
 
     private void updateListViewBiddings() {
-        // TODO show on UI
-        // test code
-        TextView t = new TextView(mainActivity);
-        t.setText("updateListViewBiddings!");
-        LayoutParams lp = llBidding.getLayoutParams();
-        lp.height = LayoutParams.WRAP_CONTENT;
-        lp.width = LayoutParams.MATCH_PARENT;
-        t.setLayoutParams(lp);
-        llBidding.addView(t, 0);
+        listViewBiddings.setAdapter(new BiddingsAdeptet(mainActivity, bs));
+        listViewBiddings.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
+
+            }
+        });
 
         // 显示主View
         llBidding.setVisibility(View.VISIBLE);
@@ -141,8 +143,7 @@ public class BiddingFragment extends BaseFragment {
                 if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
                     Log.i("success");
                     Log.d("getMessageContent: " + msg.getMessageContent());
-                    bs = JsonTool.getBiddingsList(msg.getMessageContent());// TODO
-//                    Log.d("getEarnings: " + bs.get(0).getBusinessID());
+                    bs = JsonTool.getBiddingsContainerList(msg.getMessageContent());// TODO
                 } else if (msg.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
                     Log.i("fail");
                 }
@@ -154,4 +155,64 @@ public class BiddingFragment extends BaseFragment {
         }
     }
 
+    public class BiddingsAdeptet extends BaseAdapter {
+
+        private List<BiddingContainer> biddings = null;
+        private Context mContext = null;;
+
+        public BiddingsAdeptet(Context ctx, List<BiddingContainer> bs) {
+            this.mContext = ctx;
+            this.biddings = bs;
+        }
+
+        @Override
+        public int getCount() {
+            if (biddings != null) {
+                return biddings.size() + 1;
+            }
+            return 1;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            if (biddings != null && biddings.size() != 0) {
+                return biddings.get(i);
+            }
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View v, ViewGroup group) {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            v = inflater.inflate(R.layout.lvitem_biddings, null);
+            TextView num = (TextView) v.findViewById(R.id.num);
+            TextView earning = (TextView) v.findViewById(R.id.earning);
+            TextView areaName = (TextView) v.findViewById(R.id.area_name);
+            TextView company = (TextView) v.findViewById(R.id.company_name);
+            TextView startTime = (TextView) v.findViewById(R.id.starttime);
+            TextView endTime = (TextView) v.findViewById(R.id.endtime);
+            if (i == 0) {
+                num.setText("  ");
+                earning.setText("收益");
+                areaName.setText("区域");
+                company.setText("公司");
+                startTime.setText("起始时间");
+                endTime.setText("结束时间");
+            } else {
+                num.setText(i + "");
+                earning.setText(biddings.get(i - 1).getEarnings() + "");
+                areaName.setText(biddings.get(i - 1).getAreaName());
+                company.setText(biddings.get(i - 1).getComName());
+                startTime.setText(biddings.get(i - 1).getTimeStart());
+                endTime.setText(biddings.get(i - 1).getTimeEnd());
+            }
+            return v;
+        }
+
+    }
 }
