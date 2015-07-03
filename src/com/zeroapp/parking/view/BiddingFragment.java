@@ -18,12 +18,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,6 +32,7 @@ import java.util.List;
 import com.zeroapp.parking.R;
 import com.zeroapp.parking.common.BiddingContainer;
 import com.zeroapp.parking.common.Voting;
+import com.zeroapp.parking.dialog.ConfirmDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
@@ -78,30 +77,10 @@ public class BiddingFragment extends BaseFragment {
         cityName.setText("青岛");// TODO
         listViewBiddings = (ListView) mainView.findViewById(R.id.lv_biddings);
         loadingBar = (ProgressBar) mainView.findViewById(R.id.loading);
-        Button btnTestVoting = (Button) mainView.findViewById(R.id.btn_test_voting);
-        btnTestVoting.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                testVote();
-
-            }
-
-        });
         requestBiddings();
         return mainView;
     }
 
-    protected void testVote() {
-        Voting v = new Voting();
-        v.setCarNum(mainActivity.myCars.get(0).getCarNum());
-        v.setBiddingID(bs.get(0).getBiddingID());
-        ClientServerMessage m = new ClientServerMessage();
-        m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_CREATE_VOTING);
-        m.setMessageContent(JsonTool.getString(v));
-        mainActivity.mService.sendMessageToServer(m);
-
-    }
     /**
      * <p>
      * Title: requestBiddings.
@@ -124,7 +103,30 @@ public class BiddingFragment extends BaseFragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
+                if (i != 0) {
+                    final BiddingContainer b = (BiddingContainer) adapterView.getAdapter().getItem(i - 1);
+                    final ConfirmDialog confirmDialog = new ConfirmDialog(mainActivity, "确定要选该广告吗?", "确定", "取消");
+                    confirmDialog.show();
+                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
 
+                        @Override
+                        public void doConfirm() {
+                            confirmDialog.dismiss();
+                            Voting v = new Voting();
+                            v.setCarNum(mainActivity.myCars.get(0).getCarNum());
+                            v.setBiddingID(b.getBiddingID());
+                            ClientServerMessage m = new ClientServerMessage();
+                            m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_CREATE_VOTING);
+                            m.setMessageContent(JsonTool.getString(v));
+                            mainActivity.mService.sendMessageToServer(m);
+                        }
+
+                        @Override
+                        public void doCancel() {
+                            confirmDialog.dismiss();
+                        }
+                    });
+                }
             }
         });
 

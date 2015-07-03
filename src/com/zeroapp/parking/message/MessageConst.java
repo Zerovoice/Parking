@@ -63,6 +63,7 @@ public class MessageConst {
         public static final int MSG_TYPE_COMPANY_LIST_BUSINESS = 2005;
         public static final int MSG_TYPE_COMPANY_CREATE_BIDDING = 2006;
         public static final int MSG_TYPE_COMPANY_LIST_COST = 2007;
+        public static final int MSG_TYPE_COMPANY_LIST_MY_BIDDING = 2008;
 
         // Message types sent from Client by normal user
         public static final int MSG_TYPE_USER_SIGN_IN = 3000;

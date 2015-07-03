@@ -91,7 +91,9 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onClick(View arg0) {
                 if (adManCb.isChecked()) {
-                    me.setUserType("1_0");
+                    me.setUserType("2_0");
+                } else {
+                    me.setUserType("3_0");
                 }
                 if (accountEt.getText().toString().equals("") || passwordEt.getText().toString().equals("")) {
                     Toast.makeText(SignupActivity.this, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
@@ -138,8 +140,22 @@ public class SignupActivity extends BaseActivity {
      */
     @Override
     public void dealMessage(AMessage m) {
-        // TODO Auto-generated method stub
-
+        switch (m.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_USER_SIGN_UP:
+                if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
+                } else if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
+                    Log.i("fail");
+                    Toast.makeText(SignupActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                    accountEt.setText("");
+                    passwordEt.setText("");
+                    phoneNumEt.setText("");
+                    rlSignin.setVisibility(View.VISIBLE);
+                    loadingBar.setVisibility(View.INVISIBLE);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }

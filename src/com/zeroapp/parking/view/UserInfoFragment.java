@@ -39,6 +39,7 @@ import com.zeroapp.parking.R;
 import com.zeroapp.parking.client.ClientService;
 import com.zeroapp.parking.common.CarInfo;
 import com.zeroapp.parking.dialog.BaseDialog;
+import com.zeroapp.parking.dialog.CarInfoDialog;
 import com.zeroapp.parking.dialog.UpdateInfoDialog;
 import com.zeroapp.parking.message.AMessage;
 import com.zeroapp.parking.message.ClientServerMessage;
@@ -124,13 +125,49 @@ public class UserInfoFragment extends BaseFragment implements OnLongClickListene
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int i, long arg3) {
-                CarInfo car = (CarInfo) adapterView.getAdapter().getItem(i);
+                final CarInfo car = (CarInfo) adapterView.getAdapter().getItem(i);
                 // TODO new dialog
                 if (car != null) {
                     Log.i("num: " + car.getCarNum());
-                    new BaseDialog(mainActivity, R.layout.device_list).show();
+                    final CarInfoDialog dialog = new CarInfoDialog(mainActivity, car, "确定修改车辆信息?", "确定", "取消");
+                    dialog.show();
+                    dialog.setClicklistener(new CarInfoDialog.ClickListenerInterface() {
+
+                        @Override
+                        public void doConfirm() {
+                            dialog.dismiss();
+                            // TODO
+                        }
+
+                        @Override
+                        public void doCancel() {
+                            dialog.dismiss();
+                        }
+                    });
                 } else {
-                    new BaseDialog(mainActivity, R.layout.device_list).show();
+                    final CarInfoDialog dialog = new CarInfoDialog(mainActivity, car, "确定添加车辆信息?", "确定", "取消");
+                    dialog.show();
+                    dialog.setClicklistener(new CarInfoDialog.ClickListenerInterface() {
+
+                        @Override
+                        public void doConfirm() {
+                            dialog.dismiss();
+                            CarInfo newcar = new CarInfo();
+                            newcar.setCarNum("testcar");
+                            newcar.setCarType("SUV");
+                            newcar.setCarValue(300000);
+                            newcar.setParkingArea("shinan");
+                            ClientServerMessage m = new ClientServerMessage();
+                            m.setMessageType(MessageConst.MessageType.MSG_TYPE_USER_ADD_CARS);
+                            m.setMessageContent(JsonTool.getString(newcar));
+                            mainActivity.mService.sendMessageToServer(m);
+                        }
+
+                        @Override
+                        public void doCancel() {
+                            dialog.dismiss();
+                        }
+                    });
 
                 }
 

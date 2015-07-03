@@ -116,7 +116,20 @@ public class SigninActivity extends BaseActivity {
      */
     @Override
     public void dealMessage(AMessage m) {
-        // TODO Auto-generated method stub
-
+        switch (m.getMessageType()) {
+            case MessageConst.MessageType.MSG_TYPE_USER_SIGN_IN:
+                if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_SUCCESS) {
+                } else if (m.getMessageResult() == MessageConst.MessageResult.MSG_RESULT_FAIL) {
+                    Log.i("fail");
+                    Toast.makeText(SigninActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                    editTextAccount.setText("");
+                    editTextPwd.setText("");
+                    llSignin.setVisibility(View.VISIBLE);
+                    loadingBar.setVisibility(View.INVISIBLE);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

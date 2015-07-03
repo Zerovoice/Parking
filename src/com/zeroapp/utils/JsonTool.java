@@ -23,8 +23,8 @@ import java.util.List;
 
 import com.zeroapp.parking.common.Bidding;
 import com.zeroapp.parking.common.BiddingContainer;
-import com.zeroapp.parking.common.Business;
 import com.zeroapp.parking.common.CarInfo;
+import com.zeroapp.parking.common.CommercialDetails;
 import com.zeroapp.parking.common.ParkingInfo;
 import com.zeroapp.parking.common.User;
 
@@ -98,9 +98,9 @@ public class JsonTool {
         return cars;
     }
 
-    public static List<Business> getBusinessList(String messageContent) {
+    public static List<CommercialDetails> getBusinessList(String messageContent) {
         Gson g = new Gson();
-        List<Business> bs = g.fromJson(messageContent, new TypeToken<List<Business>>() {
+        List<CommercialDetails> bs = g.fromJson(messageContent, new TypeToken<List<CommercialDetails>>() {
         }.getType());
         return bs;
     }

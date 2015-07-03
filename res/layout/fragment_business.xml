@@ -5,7 +5,7 @@
     android:background="@drawable/login_button_nor" >
 
     <LinearLayout
-        android:id="@+id/ll_bidding"
+        android:id="@+id/ll_bbusiness"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" 
@@ -42,20 +42,12 @@
                 android:textSize="36sp" />
 
             <ListView
-                android:id="@+id/lv_biddings"
+                android:id="@+id/lv_business"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:verticalSpacing="2dp" />
         </LinearLayout>
-        <!-- Test Button -->
-        <Button
-            android:id="@+id/btn_test_bidding"
-            android:layout_width="wrap_content"
-            android:layout_height="35dip"
-            android:background="@drawable/login_btn_selector"
-            android:gravity="center"
-            android:text="testBidding" />
 
     </LinearLayout>
 
