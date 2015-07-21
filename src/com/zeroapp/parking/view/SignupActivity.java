@@ -32,6 +32,9 @@ import com.zeroapp.parking.message.ClientServerMessage;
 import com.zeroapp.parking.message.MessageConst;
 import com.zeroapp.utils.JsonTool;
 import com.zeroapp.utils.Log;
+import android.widget.CompoundButton; 
+
+
 
 /**
  * <p>
@@ -90,11 +93,20 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (adManCb.isChecked()) {
-                    me.setUserType("2_0");
-                } else {
-                    me.setUserType("3_0");
-                }
+            	adManCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean arg1) {
+						
+						if (arg1) {
+							me.setUserType("2_0");
+						} else {
+							me.setUserType("3_0");
+						}
+					}
+					
+				});
                 if (accountEt.getText().toString().equals("") || passwordEt.getText().toString().equals("")) {
                     Toast.makeText(SignupActivity.this, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
                 } else if (!agreementCb.isChecked()) {

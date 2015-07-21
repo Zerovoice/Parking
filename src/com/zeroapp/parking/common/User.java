@@ -61,7 +61,7 @@ public class User {
      * _之前表示用户类型0-普通用户;1-广告投放商;2-Admin;
      * _之后表示用户在该类型的等级,预留
      */
-    private String userType = "0_0";
+    private String userType = "3_0";
 
     /**
      * 用户账户余额
